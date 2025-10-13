@@ -4024,7 +4024,7 @@ html {
   ::-webkit-scrollbar-thumb {
     background: #d4af37; /* Warna thumb scrollbar */
     border-radius: 5px; /* Membuat thumb lebih bulat */
-    border: 2px solid #fff6cc; /* Menambahkan border untuk kontras */
+    border: 2px solid #d4af37; /* Menambahkan border untuk kontras */
   }
   
   /* Gaya untuk thumb scrollbar saat di-hover */

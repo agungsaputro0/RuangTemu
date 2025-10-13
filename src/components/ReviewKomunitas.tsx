@@ -6,13 +6,14 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
+import { Dialog, DialogContent, DialogPortal, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from './ui/dialog';
 import { Textarea } from './ui/textarea';
 import { Label } from './ui/label';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
 import { LoginModal } from './LoginModal';
+import { FaTrashAlt } from 'react-icons/fa';
 
 const reviews = [
   {
@@ -108,6 +109,13 @@ export function ReviewKomunitas() {
   const [newTopicTitle, setNewTopicTitle] = useState('');
   const [newTopicContent, setNewTopicContent] = useState('');
   const [newReply, setNewReply] = useState('');
+  const [tempReplies, setTempReplies] = useState<any[]>([]); // simpan balasan sementara
+
+  const handleCloseTopicDetail = () => {
+    setShowTopicDetailDialog(false);
+    setSelectedTopic(null);
+    setNewReply('');
+  };
 
   const handleCreateTopic = () => {
     if (!newTopicTitle.trim() || !newTopicContent.trim()) {
@@ -126,13 +134,26 @@ export function ReviewKomunitas() {
   };
 
   const handlePostReply = () => {
-    if (!newReply.trim()) {
-      toast.error('Mohon isi balasan Anda');
-      return;
-    }
-    toast.success('Balasan berhasil diposting!');
-    setNewReply('');
+  if (!newReply.trim()) {
+    toast.error('Mohon isi balasan Anda');
+    return;
+  }
+
+  // buat objek balasan sementara
+  const replyObj = {
+    id: Date.now(),
+    author: 'Anda',
+    avatarBg: '#D4AF37',
+    avatarText: 'A',
+    content: newReply,
+    timeAgo: 'Baru saja',
   };
+
+  // tambahkan ke list balasan sementara
+  setTempReplies([replyObj, ...tempReplies]);
+  setNewReply('');
+  toast.success('Balasan berhasil diposting!');
+};
 
   const handleCreateTopicClick = () => {
     if (!isAuthenticated) {
@@ -151,6 +172,8 @@ export function ReviewKomunitas() {
     }
     handlePostReply();
   };
+
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
@@ -408,73 +431,153 @@ export function ReviewKomunitas() {
       </div>
 
       {/* New Topic Dialog */}
-      <Dialog open={showNewTopicDialog} onOpenChange={setShowNewTopicDialog}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Plus className="w-5 h-5 text-[#D4AF37]" />
-              Buat Topik Diskusi Baru
-            </DialogTitle>
-            <DialogDescription>
-              Mulai diskusi baru dengan komunitas Ruang Temu
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="topicTitle">Judul Topik *</Label>
-              <Input
-                id="topicTitle"
-                placeholder="Contoh: Tips Memilih Venue untuk Budget Terbatas"
-                value={newTopicTitle}
-                onChange={(e) => setNewTopicTitle(e.target.value)}
-                className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-              />
+      {/* <Dialog open={showNewTopicDialog} onOpenChange={setShowNewTopicDialog}>
+         <DialogPortal>
+          <DialogContent className="sm:max-w-[600px] bg-white rounded-lg shadow-lg">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Plus className="w-5 h-5 text-[#D4AF37]" />
+                Buat Topik Diskusi Baru
+              </DialogTitle>
+              <DialogDescription>
+                Mulai diskusi baru dengan komunitas Ruang Temu
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label htmlFor="topicTitle">Judul Topik AS*</Label>
+                <Input
+                  id="topicTitle"
+                  placeholder="Contoh: Tips Memilih Venue untuk Budget Terbatas"
+                  value={newTopicTitle}
+                  onChange={(e) => setNewTopicTitle(e.target.value)}
+                  className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="topicContent">Konten Diskusi *</Label>
+                <Textarea
+                  id="topicContent"
+                  placeholder="Tulis pertanyaan atau topik diskusi Anda di sini..."
+                  value={newTopicContent}
+                  onChange={(e) => setNewTopicContent(e.target.value)}
+                  rows={6}
+                  className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+                />
+              </div>
+
+              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                <p className="text-sm text-blue-800">
+                  💡 Tips: Buat judul yang jelas dan deskriptif agar mudah ditemukan oleh anggota lain
+                </p>
+              </div>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="topicContent">Konten Diskusi *</Label>
-              <Textarea
-                id="topicContent"
-                placeholder="Tulis pertanyaan atau topik diskusi Anda di sini..."
-                value={newTopicContent}
-                onChange={(e) => setNewTopicContent(e.target.value)}
-                rows={6}
-                className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-              />
-            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowNewTopicDialog(false);
+                  setNewTopicTitle('');
+                  setNewTopicContent('');
+                }}
+              >
+                Batal
+              </Button>
+              <Button
+                onClick={handleCreateTopic}
+                className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+              >
+                <Send className="w-4 h-4 mr-2" />
+                Posting Topik
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </DialogPortal>
+      </Dialog> */}
 
-            <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-              <p className="text-sm text-blue-800">
-                💡 Tips: Buat judul yang jelas dan deskriptif agar mudah ditemukan oleh anggota lain
-              </p>
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowNewTopicDialog(false);
-                setNewTopicTitle('');
-                setNewTopicContent('');
-              }}
-            >
-              Batal
-            </Button>
-            <Button
-              onClick={handleCreateTopic}
-              className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Posting Topik
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      {showNewTopicDialog && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    {/* Background overlay */}
+    <div
+      className="absolute inset-0 bg-black/50"
+      onClick={() => setShowNewTopicDialog(false)}
+    />
+
+    {/* Modal container */}
+    <div className="relative bg-white w-full max-w-md sm:max-w-lg rounded-lg shadow-lg p-6 overflow-auto max-h-[90vh] z-10">
+      {/* Header */}
+      <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
+        <div className="flex items-center gap-2 mb-1">
+          <Plus className="w-5 h-5 text-[#D4AF37]" />
+          <h2 className="text-lg font-semibold">Buat Topik Diskusi Baru</h2>
+        </div>
+        <p className="text-sm text-gray-600">
+          Mulai diskusi baru dengan komunitas Ruang Temu
+        </p>
+      </div>
+
+      {/* Form */}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="topicTitle">Judul Topik AS*</Label>
+          <Input
+            id="topicTitle"
+            placeholder="Contoh: Tips Memilih Venue untuk Budget Terbatas"
+            value={newTopicTitle}
+            onChange={(e) => setNewTopicTitle(e.target.value)}
+            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="topicContent">Konten Diskusi *</Label>
+          <Textarea
+            id="topicContent"
+            placeholder="Tulis pertanyaan atau topik diskusi Anda di sini..."
+            value={newTopicContent}
+            onChange={(e) => setNewTopicContent(e.target.value)}
+            rows={6}
+            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+          />
+        </div>
+
+        <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+          <p className="text-sm text-blue-800">
+            💡 Tips: Buat judul yang jelas dan deskriptif agar mudah ditemukan oleh anggota lain
+          </p>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-4 flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setShowNewTopicDialog(false);
+            setNewTopicTitle('');
+            setNewTopicContent('');
+          }}
+        >
+          Batal
+        </Button>
+        <Button
+          onClick={handleCreateTopic}
+          className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+        >
+          <Send className="w-4 h-4 mr-2" />
+          Posting Topik
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Topic Detail Dialog */}
-      <Dialog open={showTopicDetailDialog} onOpenChange={setShowTopicDetailDialog}>
+      {/* <Dialog  open={showTopicDetailDialog} onOpenChange={setShowTopicDetailDialog}>
         <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="flex items-start gap-2">
@@ -502,7 +605,7 @@ export function ReviewKomunitas() {
           </DialogHeader>
           
           <div className="space-y-4 py-4">
-            {/* Original Post */}
+      
             <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-[#FFE4E9]/10">
               <CardContent className="p-4">
                 <p className="text-gray-700 mb-4">
@@ -523,7 +626,7 @@ export function ReviewKomunitas() {
               </CardContent>
             </Card>
 
-            {/* Replies */}
+            
             <div className="space-y-3">
               <h4 className="text-sm text-gray-600">Balasan ({selectedTopic?.replies || 0})</h4>
               
@@ -571,7 +674,7 @@ export function ReviewKomunitas() {
               </Card>
             </div>
 
-            {/* Reply Form */}
+          
             <div className="space-y-2 border-t pt-4">
               <Label htmlFor="newReply">Tulis Balasan</Label>
               <Textarea
@@ -595,7 +698,182 @@ export function ReviewKomunitas() {
             </div>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
+
+       {showTopicDetailDialog && (
+  <div
+    className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50"
+    onClick={handleCloseTopicDetail} // klik di overlay menutup modal
+  >
+    {/* modal content */}
+    <div
+      className="relative bg-white rounded-lg shadow-lg max-w-[700px] w-full max-h-[90vh] overflow-y-auto z-10 p-6"
+      onClick={(e) => e.stopPropagation()} // klik di modal TIDAK menutup modal
+    >
+      {/* header */}
+      <div className="flex justify-between items-center mb-4 p-3 rounded-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
+        <div className="flex-1">
+          <h3 className="text-lg font-semibold mb-2">{selectedTopic?.title}</h3>
+          <div className="flex items-center gap-3 text-sm text-gray-600">
+            <div className="flex items-center gap-1">
+              <Avatar className="w-6 h-6">
+                <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37] text-xs">
+                  {selectedTopic?.author?.[0]}
+                </AvatarFallback>
+              </Avatar>
+              <span>{selectedTopic?.author}</span>
+            </div>
+            <span className="flex items-center gap-1">
+              <Clock className="w-4 h-4" />
+              {selectedTopic?.lastActive}
+            </span>
+          </div>
+        </div>
+        <button
+          onClick={handleCloseTopicDetail}
+          className="text-gray-500 hover:text-gray-700 mr-2 bg-gray-300 w-8 h-8 rounded-full"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* konten utama */}
+      <div className="space-y-4">
+        <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-[#FFE4E9]/10">
+          <CardContent className="p-4">
+            <p className="text-gray-700 mb-4">
+              Halo semuanya! Saya sedang mencari venue untuk pernikahan dengan budget
+              yang terbatas. Apakah ada yang punya tips atau rekomendasi venue yang bagus
+              tapi dengan harga yang reasonable? Budget saya sekitar 30-50 juta untuk 200 tamu.
+              Terima kasih!
+            </p>
+            <div className="flex gap-4 text-sm text-gray-500">
+              <span className="flex items-center gap-1">
+                <Eye className="w-4 h-4" />
+                {selectedTopic?.views} views
+              </span>
+              <span className="flex items-center gap-1">
+                <MessageSquare className="w-4 h-4" />
+                {selectedTopic?.replies} balasan
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* balasan */}
+        <div className="space-y-3">
+  <h4 className="text-sm text-gray-600">
+    Balasan {(selectedTopic?.replies || 0) + tempReplies.length}
+  </h4>
+
+  {/* Balasan lama */}
+  <Card className="border-gray-200">
+    <CardContent className="p-4">
+      <div className="flex gap-3 mb-3">
+        <Avatar className="w-8 h-8">
+          <AvatarFallback className="bg-[#FFE4E9] text-[#FFB6C1]">
+            R
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-sm">Rina Susanti</p>
+            <span className="text-xs text-gray-500">1 jam lalu</span>
+          </div>
+          <p className="text-sm text-gray-700">
+            Coba lihat di area Tangerang atau Bekasi, biasanya lebih murah dibanding Jakarta.
+            Saya dulu pakai venue di Bekasi untuk 250 tamu cuma 45 juta sudah include katering!
+          </p>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Balasan lama kedua */}
+  <Card className="border-gray-200">
+    <CardContent className="p-4">
+      <div className="flex gap-3 mb-3">
+        <Avatar className="w-8 h-8">
+          <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37]">
+            A
+          </AvatarFallback>
+        </Avatar>
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-sm">Andi Wijaya</p>
+            <span className="text-xs text-gray-500">3 jam lalu</span>
+          </div>
+          <p className="text-sm text-gray-700">
+            Tips: Book di hari weekday bisa lebih murah 30-40%. Temen saya nikah Kamis dan dapat diskon gede!
+          </p>
+        </div>
+      </div>
+    </CardContent>
+  </Card>
+
+  {/* Balasan baru */}
+  {tempReplies.map((reply) => (
+    <Card key={reply.id} className="border-gray-200 bg-yellow-50 relative">
+      <CardContent className="p-4">
+        <div className="flex gap-3 mb-3">
+          <Avatar className="w-8 h-8">
+            <AvatarFallback className="bg-[#D4AF37] text-white">
+              {reply.avatarText}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                <p className="text-sm">{reply.author}</p>
+                <span className="text-xs text-gray-500">{reply.timeAgo}</span>
+              </div>
+              <button
+                onClick={() => {
+                    setTempReplies(tempReplies.filter((r) => r.id !== reply.id));
+                    toast.success('Komentar berhasil dihapus!');
+                  }
+                }
+                className="text-red-500 hover:text-red-700 text-xs"
+              >
+                <FaTrashAlt />
+              </button>
+            </div>
+            <p className="text-sm text-gray-700">{reply.content}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  ))}
+</div>
+
+
+        {/* input balasan */}
+        <div className="space-y-2 border-t pt-4">
+          <Label htmlFor="newReply">Tulis Balasan</Label>
+          <Textarea
+            id="newReply"
+            placeholder="Bagikan pengalaman atau saran Anda..."
+            value={newReply}
+            onChange={(e) => setNewReply(e.target.value)}
+            rows={3}
+            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+          />
+          <div className="flex justify-end">
+            <Button
+              onClick={handleReplyClick}
+              size="sm"
+              className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+            >
+              <Send className="w-4 h-4 mr-2" />
+              Kirim Balasan
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
