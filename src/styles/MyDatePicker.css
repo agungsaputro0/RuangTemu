@@ -1,0 +1,29 @@
+/* Highlight tanggal terpilih */
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #D4AF37 !important;
+  color: white !important;
+}
+
+/* Header bulan */
+.react-datepicker__header {
+  background-color: #FFF8DC; /* bisa juga lebih netral */
+  border-bottom: 1px solid #D4AF37;
+}
+
+/* Button navigasi bulan */
+.react-datepicker__navigation--previous,
+.react-datepicker__navigation--next {
+  border-color: #D4AF37;
+}
+
+/* Nama hari */
+.react-datepicker__day-name {
+  color: #D4AF37;
+}
+
+/* Hover tanggal */
+.react-datepicker__day:hover {
+  background-color: #D4AF37;
+  color: white;
+}
