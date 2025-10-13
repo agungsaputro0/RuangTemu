@@ -701,177 +701,176 @@ export function ReviewKomunitas() {
       </Dialog> */}
 
        {showTopicDetailDialog && (
+   <div
+  className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50"
+  onClick={handleCloseTopicDetail}
+>
+  {/* modal content */}
   <div
-    className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/50"
-    onClick={handleCloseTopicDetail} // klik di overlay menutup modal
+    className="relative bg-white rounded-lg shadow-lg max-w-[700px] w-full max-h-[90vh] flex flex-col z-10"
+    onClick={(e) => e.stopPropagation()}
   >
-    {/* modal content */}
-    <div
-      className="relative bg-white rounded-lg shadow-lg max-w-[700px] w-full max-h-[90vh] overflow-y-auto z-10 p-6"
-      onClick={(e) => e.stopPropagation()} // klik di modal TIDAK menutup modal
-    >
-      {/* header */}
-      <div className="flex justify-between items-center mb-4 p-3 rounded-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold mb-2">{selectedTopic?.title}</h3>
-          <div className="flex items-center gap-3 text-sm text-gray-600">
-            <div className="flex items-center gap-1">
-              <Avatar className="w-6 h-6">
-                <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37] text-xs">
-                  {selectedTopic?.author?.[0]}
-                </AvatarFallback>
-              </Avatar>
-              <span>{selectedTopic?.author}</span>
-            </div>
+    {/* header */}
+    <div className="flex justify-between items-center p-3 rounded-t-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
+      <div className="flex-1">
+        <h3 className="text-lg font-semibold mb-1">{selectedTopic?.title}</h3>
+        <div className="flex items-center gap-3 text-sm text-gray-600">
+          <div className="flex items-center gap-1">
+            <Avatar className="w-6 h-6">
+              <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37] text-xs">
+                {selectedTopic?.author?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            <span>{selectedTopic?.author}</span>
+          </div>
+          <span className="flex items-center gap-1">
+            <Clock className="w-4 h-4" />
+            {selectedTopic?.lastActive}
+          </span>
+        </div>
+      </div>
+      <button
+        onClick={handleCloseTopicDetail}
+        className="text-gray-500 hover:text-gray-700 w-8 h-8 rounded-full"
+      >
+        ✕
+      </button>
+    </div>
+
+    {/* konten + komentar scrollable */}
+    <div className="flex-1 flex flex-col overflow-hidden space-y-4 p-4">
+      {/* post utama */}
+      <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-[#FFE4E9]/10">
+        <CardContent className="p-4">
+          <p className="text-gray-700 mb-4">
+            Halo semuanya! Saya sedang mencari venue untuk pernikahan dengan budget
+            yang terbatas. Apakah ada yang punya tips atau rekomendasi venue yang bagus
+            tapi dengan harga yang reasonable? Budget saya sekitar 30-50 juta untuk 200 tamu.
+            Terima kasih!
+          </p>
+          <div className="flex gap-4 text-sm text-gray-500">
             <span className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              {selectedTopic?.lastActive}
+              <Eye className="w-4 h-4" />
+              {selectedTopic?.views} views
+            </span>
+            <span className="flex items-center gap-1">
+              <MessageSquare className="w-4 h-4" />
+              {selectedTopic?.replies} balasan
             </span>
           </div>
-        </div>
-        <button
-          onClick={handleCloseTopicDetail}
-          className="text-gray-500 hover:text-gray-700 mr-2 bg-gray-300 w-8 h-8 rounded-full"
-        >
-          ✕
-        </button>
-      </div>
+        </CardContent>
+      </Card>
 
-      {/* konten utama */}
-      <div className="space-y-4">
-        <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-[#FFE4E9]/10">
+      {/* daftar komentar scrollable */}
+      <div className="flex-1 overflow-y-auto space-y-3">
+        <h4 className="text-sm text-gray-600 sticky top-0 bg-white pt-2">
+          Balasan {(selectedTopic?.replies || 0) + tempReplies.length}
+        </h4>
+
+        {/* balasan lama */}
+        <Card className="border-gray-200">
           <CardContent className="p-4">
-            <p className="text-gray-700 mb-4">
-              Halo semuanya! Saya sedang mencari venue untuk pernikahan dengan budget
-              yang terbatas. Apakah ada yang punya tips atau rekomendasi venue yang bagus
-              tapi dengan harga yang reasonable? Budget saya sekitar 30-50 juta untuk 200 tamu.
-              Terima kasih!
-            </p>
-            <div className="flex gap-4 text-sm text-gray-500">
-              <span className="flex items-center gap-1">
-                <Eye className="w-4 h-4" />
-                {selectedTopic?.views} views
-              </span>
-              <span className="flex items-center gap-1">
-                <MessageSquare className="w-4 h-4" />
-                {selectedTopic?.replies} balasan
-              </span>
+            <div className="flex gap-3 mb-3">
+              <Avatar className="w-8 h-8">
+                <AvatarFallback className="bg-[#FFE4E9] text-[#FFB6C1]">
+                  R
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-sm">Rina Susanti</p>
+                  <span className="text-xs text-gray-500">1 jam lalu</span>
+                </div>
+                <p className="text-sm text-gray-700">
+                  Coba lihat di area Tangerang atau Bekasi, biasanya lebih murah dibanding Jakarta.
+                  Saya dulu pakai venue di Bekasi untuk 250 tamu cuma 45 juta sudah include katering!
+                </p>
+              </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* balasan */}
-        <div className="space-y-3">
-  <h4 className="text-sm text-gray-600">
-    Balasan {(selectedTopic?.replies || 0) + tempReplies.length}
-  </h4>
-
-  {/* Balasan lama */}
-  <Card className="border-gray-200">
-    <CardContent className="p-4">
-      <div className="flex gap-3 mb-3">
-        <Avatar className="w-8 h-8">
-          <AvatarFallback className="bg-[#FFE4E9] text-[#FFB6C1]">
-            R
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-sm">Rina Susanti</p>
-            <span className="text-xs text-gray-500">1 jam lalu</span>
-          </div>
-          <p className="text-sm text-gray-700">
-            Coba lihat di area Tangerang atau Bekasi, biasanya lebih murah dibanding Jakarta.
-            Saya dulu pakai venue di Bekasi untuk 250 tamu cuma 45 juta sudah include katering!
-          </p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-
-  {/* Balasan lama kedua */}
-  <Card className="border-gray-200">
-    <CardContent className="p-4">
-      <div className="flex gap-3 mb-3">
-        <Avatar className="w-8 h-8">
-          <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37]">
-            A
-          </AvatarFallback>
-        </Avatar>
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-sm">Andi Wijaya</p>
-            <span className="text-xs text-gray-500">3 jam lalu</span>
-          </div>
-          <p className="text-sm text-gray-700">
-            Tips: Book di hari weekday bisa lebih murah 30-40%. Temen saya nikah Kamis dan dapat diskon gede!
-          </p>
-        </div>
-      </div>
-    </CardContent>
-  </Card>
-
-  {/* Balasan baru */}
-  {tempReplies.map((reply) => (
-    <Card key={reply.id} className="border-gray-200 bg-yellow-50 relative">
-      <CardContent className="p-4">
-        <div className="flex gap-3 mb-3">
-          <Avatar className="w-8 h-8">
-            <AvatarFallback className="bg-[#D4AF37] text-white">
-              {reply.avatarText}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1">
-            <div className="flex items-center justify-between mb-1">
-              <div className="flex items-center gap-2">
-                <p className="text-sm">{reply.author}</p>
-                <span className="text-xs text-gray-500">{reply.timeAgo}</span>
+        <Card className="border-gray-200">
+          <CardContent className="p-4">
+            <div className="flex gap-3 mb-3">
+              <Avatar className="w-8 h-8">
+                <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37]">
+                  A
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <p className="text-sm">Andi Wijaya</p>
+                  <span className="text-xs text-gray-500">3 jam lalu</span>
+                </div>
+                <p className="text-sm text-gray-700">
+                  Tips: Book di hari weekday bisa lebih murah 30-40%. Temen saya nikah Kamis dan dapat diskon gede!
+                </p>
               </div>
-              <button
-                onClick={() => {
-                    setTempReplies(tempReplies.filter((r) => r.id !== reply.id));
-                    toast.success('Komentar berhasil dihapus!');
-                  }
-                }
-                className="text-red-500 hover:text-red-700 text-xs"
-              >
-                <FaTrashAlt />
-              </button>
             </div>
-            <p className="text-sm text-gray-700">{reply.content}</p>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  ))}
-</div>
+          </CardContent>
+        </Card>
 
+        {/* balasan baru */}
+        {tempReplies.map((reply) => (
+          <Card key={reply.id} className="border-gray-200 bg-yellow-50 relative">
+            <CardContent className="p-4">
+              <div className="flex gap-3 mb-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarFallback className="bg-[#D4AF37] text-white">
+                    {reply.avatarText}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm">{reply.author}</p>
+                      <span className="text-xs text-gray-500">{reply.timeAgo}</span>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setTempReplies(tempReplies.filter((r) => r.id !== reply.id));
+                        toast.success('Komentar berhasil dihapus!');
+                      }}
+                      className="text-red-500 hover:text-red-700 text-xs"
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </div>
+                  <p className="text-sm text-gray-700">{reply.content}</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
 
-        {/* input balasan */}
-        <div className="space-y-2 border-t pt-4">
-          <Label htmlFor="newReply">Tulis Balasan</Label>
-          <Textarea
-            id="newReply"
-            placeholder="Bagikan pengalaman atau saran Anda..."
-            value={newReply}
-            onChange={(e) => setNewReply(e.target.value)}
-            rows={3}
-            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-          />
-          <div className="flex justify-end">
-            <Button
-              onClick={handleReplyClick}
-              size="sm"
-              className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Kirim Balasan
-            </Button>
-          </div>
-        </div>
+    {/* input komentar selalu di bawah modal */}
+    <div className="p-4 border-t bg-white shrink-0">
+      <Label htmlFor="newReply">Tulis Balasan</Label>
+      <Textarea
+        id="newReply"
+        placeholder="Bagikan pengalaman atau saran Anda..."
+        value={newReply}
+        onChange={(e) => setNewReply(e.target.value)}
+        rows={3}
+        className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+      />
+      <div className="flex justify-end mt-2">
+        <Button
+          onClick={handleReplyClick}
+          size="sm"
+          className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+        >
+          <Send className="w-4 h-4 mr-2" />
+          Kirim Balasan
+        </Button>
       </div>
     </div>
   </div>
+</div>
+
 )}
 
 

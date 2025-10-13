@@ -784,303 +784,356 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
       </div>
 
       {/* Proposal Dialog */}
-      <Dialog open={showProposalDialog} onOpenChange={setShowProposalDialog}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-[#D4AF37]" />
-              Ajukan Tawaran Harga Baru
-            </DialogTitle>
-            <DialogDescription>
-              Masukkan harga yang Anda inginkan dan berikan alasan pengajuan
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Harga Saat Ini</p>
-              <p className="text-[#D4AF37]">Rp 67.500.000</p>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="proposedPrice">Harga yang Diajukan *</Label>
-              <Input
-                id="proposedPrice"
-                type="number"
-                placeholder="Contoh: 60000000"
-                value={proposedPrice}
-                onChange={(e) => setProposedPrice(e.target.value)}
-                className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="proposalReason">Alasan Pengajuan *</Label>
-              <Textarea
-                id="proposalReason"
-                placeholder="Contoh: Saya memiliki budget terbatas dan ini adalah acara pertama kami..."
-                value={proposalReason}
-                onChange={(e) => setProposalReason(e.target.value)}
-                rows={4}
-                className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-              />
-            </div>
-            
-            {proposedPrice && (
-              <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-800">
-                  <AlertCircle className="w-4 h-4 inline mr-1" />
-                  Anda mengajukan penurunan harga sebesar{' '}
-                  {(((67500000 - parseInt(proposedPrice)) / 67500000) * 100).toFixed(1)}%
-                </p>
-              </div>
-            )}
+      {showProposalDialog && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    {/* Background overlay */}
+    <div
+      className="absolute inset-0 bg-black/50"
+      onClick={() => setShowProposalDialog(false)}
+    />
+
+    {/* Modal container */}
+    <div className="relative bg-white w-full max-w-md sm:max-w-lg rounded-lg shadow-lg p-6 overflow-auto max-h-[90vh] z-10 flex flex-col">
+      
+      {/* Header */}
+      <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
+        <div className="flex items-center gap-2 mb-1">
+          <DollarSign className="w-5 h-5 text-[#D4AF37]" />
+          <h2 className="text-lg font-semibold">Ajukan Tawaran Harga Baru</h2>
+        </div>
+        <p className="text-sm text-gray-600">
+          Masukkan harga yang Anda inginkan dan berikan alasan pengajuan
+        </p>
+      </div>
+
+      {/* Form */}
+      <div className="space-y-4 flex-1 overflow-auto">
+        {/* Harga Saat Ini */}
+        <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
+          <p className="text-sm text-gray-600 mb-1">Harga Saat Ini</p>
+          <p className="text-[#D4AF37]">Rp 67.500.000</p>
+        </div>
+
+        {/* Harga yang Diajukan */}
+        <div className="space-y-2">
+          <Label htmlFor="proposedPrice">Harga yang Diajukan *</Label>
+          <Input
+            id="proposedPrice"
+            type="number"
+            placeholder="Contoh: 60000000"
+            value={proposedPrice}
+            onChange={(e) => setProposedPrice(e.target.value)}
+            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+          />
+        </div>
+
+        {/* Alasan Pengajuan */}
+        <div className="space-y-2">
+          <Label htmlFor="proposalReason">Alasan Pengajuan *</Label>
+          <Textarea
+            id="proposalReason"
+            placeholder="Contoh: Saya memiliki budget terbatas dan ini adalah acara pertama kami..."
+            value={proposalReason}
+            onChange={(e) => setProposalReason(e.target.value)}
+            rows={4}
+            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+          />
+        </div>
+
+        {/* Info Penurunan Harga */}
+        {proposedPrice && (
+          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-sm text-blue-800">
+              <AlertCircle className="w-4 h-4 inline mr-1" />
+              Anda mengajukan penurunan harga sebesar{' '}
+              {(((67500000 - parseInt(proposedPrice)) / 67500000) * 100).toFixed(1)}%
+            </p>
           </div>
-          
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowProposalDialog(false)}
-            >
-              Batal
-            </Button>
-            <Button
-              onClick={handleSendProposal}
-              className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
-            >
-              Kirim Tawaran
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="mt-4 flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => setShowProposalDialog(false)}
+        >
+          Batal
+        </Button>
+        <Button
+          onClick={handleSendProposal}
+          className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+        >
+          Kirim Tawaran
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Contract Dialog */}
-      <Dialog open={showContractDialog} onOpenChange={setShowContractDialog}>
-        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5 text-[#D4AF37]" />
-              Kontrak Digital
-            </DialogTitle>
-            <DialogDescription>
-              {selectedContract ? `Kontrak untuk ${selectedContract.venueName}` : 'Buat kontrak digital baru'}
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-6 py-4">
-            {/* Contract Header */}
-            <div className="text-center border-b pb-4">
-              <h2 className="mb-2">SURAT PERJANJIAN BOOKING VENUE</h2>
-              <p className="text-sm text-gray-600">No. Kontrak: {selectedContract?.id || '001'}/RTE/2025</p>
-            </div>
+      {showContractDialog && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    {/* Background overlay */}
+    <div
+      className="absolute inset-0 bg-black/50"
+      onClick={() => {
+        setShowContractDialog(false);
+        setSelectedContract(null);
+      }}
+    />
 
-            {/* Parties Information */}
-            <div className="space-y-4">
-              <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-                <h3 className="mb-3">Pihak Pertama (Vendor):</h3>
-                <div className="space-y-1 text-sm">
-                  <p><span className="text-gray-600">Nama:</span> {selectedContract?.venueName || 'Grand Ballroom Elegance'}</p>
-                  <p><span className="text-gray-600">Alamat:</span> Jl. Sudirman No. 123, Jakarta Selatan</p>
-                  <p><span className="text-gray-600">Telepon:</span> (021) 1234-5678</p>
-                </div>
-              </div>
+    {/* Modal container */}
+    <div className="relative bg-white w-full max-w-3xl rounded-lg shadow-lg p-6 overflow-auto max-h-[90vh] z-10 flex flex-col">
+      
+      {/* Header */}
+      <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
+        <div className="flex items-center gap-2 mb-1">
+          <FileText className="w-5 h-5 text-[#D4AF37]" />
+          <h2 className="text-lg font-semibold">Kontrak Digital</h2>
+        </div>
+        <p className="text-sm text-gray-600">
+          {selectedContract
+            ? `Kontrak untuk ${selectedContract.venueName}`
+            : 'Buat kontrak digital baru'}
+        </p>
+      </div>
 
-              <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-                <h3 className="mb-3">Pihak Kedua (Calon Pengantin):</h3>
-                <div className="space-y-1 text-sm">
-                  <p><span className="text-gray-600">Nama:</span> John Doe & Jane Smith</p>
-                  <p><span className="text-gray-600">Email:</span> johndoe@example.com</p>
-                  <p><span className="text-gray-600">Telepon:</span> 0812-3456-7890</p>
-                </div>
-              </div>
-            </div>
+      {/* Content */}
+      <div className="space-y-6 flex-1 overflow-auto py-2">
 
-            {/* Contract Terms */}
-            <div className="space-y-3">
-              <h3>Pasal 1: Detail Acara</h3>
-              <div className="text-sm space-y-2 text-gray-700">
-                <p><span className="text-gray-600">• Tanggal Acara:</span> {selectedContract?.date || '15 Desember 2025'}</p>
-                <p><span className="text-gray-600">• Jumlah Tamu:</span> 300 orang</p>
-                <p><span className="text-gray-600">• Waktu:</span> 10:00 - 22:00 WIB</p>
-              </div>
-            </div>
+        {/* Contract Header */}
+        <div className="text-center border-b pb-4">
+          <h2 className="mb-2">SURAT PERJANJIAN BOOKING VENUE</h2>
+          <p className="text-sm text-gray-600">
+            No. Kontrak: {selectedContract?.id || '001'}/RTE/2025
+          </p>
+        </div>
 
-            <div className="space-y-3">
-              <h3>Pasal 2: Nilai Kontrak</h3>
-              <div className="text-sm space-y-2 text-gray-700">
-                <p><span className="text-gray-600">• Total Biaya:</span> <span className="text-[#D4AF37]">{selectedContract?.amount || 'Rp 67.500.000'}</span></p>
-                <p><span className="text-gray-600">• DP (30%):</span> Rp 20.250.000</p>
-                <p><span className="text-gray-600">• Pelunasan:</span> 7 hari sebelum acara</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h3>Pasal 3: Ketentuan Umum</h3>
-              <div className="text-sm space-y-2 text-gray-700">
-                <p>• Pihak Kedua wajib membayar DP sebesar 30% dari total biaya paling lambat 3 hari setelah penandatanganan kontrak.</p>
-                <p>• Pembatalan oleh Pihak Kedua maksimal 30 hari sebelum acara dengan pengembalian DP 50%.</p>
-                <p>• Pihak Pertama bertanggung jawab menyediakan fasilitas sesuai paket yang dipilih.</p>
-                <p>• Perubahan detail acara dapat dilakukan maksimal 14 hari sebelum pelaksanaan.</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <h3>Pasal 4: Force Majeure</h3>
-              <div className="text-sm text-gray-700">
-                <p>Kedua belah pihak dibebaskan dari tanggung jawab jika terjadi keadaan kahar seperti bencana alam, wabah, atau kebijakan pemerintah yang menghalangi pelaksanaan acara.</p>
-              </div>
-            </div>
-
-            {/* Signature Section */}
-            <div className="border-t pt-4 mt-6">
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-2">Pihak Pertama</p>
-                  <div className="h-20 border-b-2 border-gray-300 mb-2"></div>
-                  <p className="text-sm">{selectedContract?.venueName || 'Grand Ballroom Elegance'}</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-gray-600 mb-2">Pihak Kedua</p>
-                  <div className="h-20 border-b-2 border-gray-300 mb-2 flex items-end justify-center pb-2">
-                    {selectedContract?.status === 'signed' || selectedContract?.status === 'completed' ? (
-                      <span className="text-[#D4AF37]">✓ Ditandatangani</span>
-                    ) : (
-                      <span className="text-gray-400 text-xs">Belum ditandatangani</span>
-                    )}
-                  </div>
-                  <p className="text-sm">John Doe & Jane Smith</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Legal Notice */}
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <div className="flex gap-2">
-                <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-blue-800">
-                  <p>Kontrak ini telah diverifikasi oleh tim hukum Ruang Temu dan memiliki kekuatan hukum yang mengikat kedua belah pihak.</p>
-                </div>
-              </div>
+        {/* Parties Info */}
+        <div className="space-y-4">
+          {/* Vendor */}
+          <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
+            <h3 className="mb-3">Pihak Pertama (Vendor):</h3>
+            <div className="space-y-1 text-sm">
+              <p><span className="text-gray-600">Nama:</span> {selectedContract?.venueName || 'Grand Ballroom Elegance'}</p>
+              <p><span className="text-gray-600">Alamat:</span> Jl. Sudirman No. 123, Jakarta Selatan</p>
+              <p><span className="text-gray-600">Telepon:</span> (021) 1234-5678</p>
             </div>
           </div>
-          
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setShowContractDialog(false);
-                setSelectedContract(null);
-              }}
-            >
-              Tutup
-            </Button>
-            {(!selectedContract || selectedContract.status === 'draft') && (
-              <Button
-                onClick={() => {
-                  setShowContractDialog(false);
-                  handleSignContract(selectedContract || contracts[0]);
-                }}
-                className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
-              >
-                <PenTool className="w-4 h-4 mr-2" />
-                Tanda Tangan Sekarang
-              </Button>
-            )}
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+
+          {/* Calon Pengantin */}
+          <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
+            <h3 className="mb-3">Pihak Kedua (Calon Pengantin):</h3>
+            <div className="space-y-1 text-sm">
+              <p><span className="text-gray-600">Nama:</span> John Doe & Jane Smith</p>
+              <p><span className="text-gray-600">Email:</span> johndoe@example.com</p>
+              <p><span className="text-gray-600">Telepon:</span> 0812-3456-7890</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Contract Terms */}
+        <div className="space-y-3 text-sm text-gray-700">
+          <div>
+            <h3>Pasal 1: Detail Acara</h3>
+            <p>• Tanggal Acara: {selectedContract?.date || '15 Desember 2025'}</p>
+            <p>• Jumlah Tamu: 300 orang</p>
+            <p>• Waktu: 10:00 - 22:00 WIB</p>
+          </div>
+          <div>
+            <h3>Pasal 2: Nilai Kontrak</h3>
+            <p>• Total Biaya: <span className="text-[#D4AF37]">{selectedContract?.amount || 'Rp 67.500.000'}</span></p>
+            <p>• DP (30%): Rp 20.250.000</p>
+            <p>• Pelunasan: 7 hari sebelum acara</p>
+          </div>
+          <div>
+            <h3>Pasal 3: Ketentuan Umum</h3>
+            <p>• Pihak Kedua wajib membayar DP 30% paling lambat 3 hari setelah kontrak.</p>
+            <p>• Pembatalan maksimal 30 hari sebelum acara, DP 50% dikembalikan.</p>
+            <p>• Pihak Pertama bertanggung jawab menyediakan fasilitas sesuai paket.</p>
+            <p>• Perubahan detail acara maksimal 14 hari sebelum pelaksanaan.</p>
+          </div>
+          <div>
+            <h3>Pasal 4: Force Majeure</h3>
+            <p>Kedua belah pihak dibebaskan dari tanggung jawab jika terjadi bencana alam, wabah, atau kebijakan pemerintah.</p>
+          </div>
+        </div>
+
+        {/* Signature Section */}
+        <div className="border-t pt-4 mt-6 grid grid-cols-2 gap-6 text-center">
+          <div>
+            <p className="text-sm text-gray-600 mb-2">Pihak Pertama</p>
+            <div className="h-20 border-b-2 border-gray-300 mb-2"></div>
+            <p className="text-sm">{selectedContract?.venueName || 'Grand Ballroom Elegance'}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-600 mb-2">Pihak Kedua</p>
+            <div className="h-20 border-b-2 border-gray-300 mb-2 flex items-end justify-center pb-2">
+              {selectedContract?.status === 'signed' || selectedContract?.status === 'completed' ? (
+                <span className="text-[#D4AF37]">✓ Ditandatangani</span>
+              ) : (
+                <span className="text-gray-400 text-xs">Belum ditandatangani</span>
+              )}
+            </div>
+            <p className="text-sm">John Doe & Jane Smith</p>
+          </div>
+        </div>
+
+        {/* Legal Notice */}
+        <div className="p-4 bg-blue-50 rounded-lg border border-blue-200 mt-4">
+          <div className="flex gap-2">
+            <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-blue-800">
+              <p>Kontrak ini telah diverifikasi oleh tim hukum Ruang Temu dan memiliki kekuatan hukum yang mengikat kedua belah pihak.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-4 flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setShowContractDialog(false);
+            setSelectedContract(null);
+          }}
+        >
+          Tutup
+        </Button>
+        {(!selectedContract || selectedContract.status === 'draft') && (
+          <Button
+            onClick={() => {
+              setShowContractDialog(false);
+              handleSignContract(selectedContract || contracts[0]);
+            }}
+            className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+          >
+            <PenTool className="w-4 h-4 mr-2" />
+            Tanda Tangan Sekarang
+          </Button>
+        )}
+      </div>
+    </div>
+  </div>
+)}
+
 
       {/* Signature Dialog */}
-      <Dialog open={showSignatureDialog} onOpenChange={setShowSignatureDialog}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <PenTool className="w-5 h-5 text-[#D4AF37]" />
-              Tanda Tangan Digital
-            </DialogTitle>
-            <DialogDescription>
-              Buat tanda tangan Anda di area di bawah ini
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-              <p className="text-sm text-gray-600 mb-1">Kontrak untuk:</p>
-              <p className="text-[#D4AF37]">{selectedContract?.venueName}</p>
-              <p className="text-sm text-gray-600 mt-2">Nilai: {selectedContract?.amount}</p>
-            </div>
+      {showSignatureDialog && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
+    {/* Background overlay */}
+    <div
+      className="absolute inset-0 bg-black/50"
+      onClick={() => {
+        setShowSignatureDialog(false);
+        clearSignature();
+        setSignature('');
+        setSelectedContract(null);
+      }}
+    />
 
-            <div className="space-y-2">
-              <Label>Gambar Tanda Tangan Anda</Label>
-              <div className="border-2 border-dashed border-[#D4AF37] rounded-lg p-4 bg-white">
-                <canvas
-                  ref={canvasRef}
-                  width={500}
-                  height={200}
-                  className="w-full cursor-crosshair border border-gray-200 rounded"
-                  onMouseDown={startDrawing}
-                  onMouseMove={draw}
-                  onMouseUp={stopDrawing}
-                  onMouseLeave={stopDrawing}
-                />
-              </div>
-              <div className="flex justify-end">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={clearSignature}
-                  className="border-gray-300"
-                >
-                  <X className="w-4 h-4 mr-1" />
-                  Hapus
-                </Button>
-              </div>
-            </div>
+    {/* Modal container */}
+    <div className="relative bg-white w-full max-w-2xl rounded-lg shadow-lg p-6 overflow-auto max-h-[90vh] z-10 flex flex-col">
+      
+      {/* Header */}
+      <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-[#D4AF37]/20 to-[#FFB6C1]/20">
+        <div className="flex items-center gap-2 mb-1">
+          <PenTool className="w-5 h-5 text-[#D4AF37]" />
+          <h2 className="text-lg font-semibold">Tanda Tangan Digital</h2>
+        </div>
+        <p className="text-sm text-gray-600">Buat tanda tangan Anda di area di bawah ini</p>
+      </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="fullName">Nama Lengkap *</Label>
-              <Input
-                id="fullName"
-                placeholder="Masukkan nama lengkap sesuai KTP"
-                value={signature}
-                onChange={(e) => setSignature(e.target.value)}
-                className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-              />
-            </div>
+      {/* Content */}
+      <div className="space-y-4 flex-1 overflow-auto py-2">
+        
+        {/* Contract info */}
+        <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
+          <p className="text-sm text-gray-600 mb-1">Kontrak untuk:</p>
+          <p className="text-[#D4AF37]">{selectedContract?.venueName}</p>
+          <p className="text-sm text-gray-600 mt-2">Nilai: {selectedContract?.amount}</p>
+        </div>
 
-            <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-              <div className="flex gap-2">
-                <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-                <div className="text-sm text-yellow-800">
-                  <p>Dengan menandatangani kontrak ini, Anda menyetujui semua ketentuan yang tercantum dalam kontrak dan bersedia melaksanakan kewajiban sebagai pihak kedua.</p>
-                </div>
-              </div>
-            </div>
+        {/* Signature canvas */}
+        <div className="space-y-2">
+          <Label>Gambar Tanda Tangan Anda</Label>
+          <div className="border-2 border-dashed border-[#D4AF37] rounded-lg p-4 bg-white">
+            <canvas
+              ref={canvasRef}
+              width={500}
+              height={200}
+              className="w-full cursor-crosshair border border-gray-200 rounded"
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onMouseLeave={stopDrawing}
+            />
           </div>
-          
-          <DialogFooter>
+          <div className="flex justify-end">
             <Button
               variant="outline"
-              onClick={() => {
-                setShowSignatureDialog(false);
-                clearSignature();
-                setSignature('');
-                setSelectedContract(null);
-              }}
+              size="sm"
+              onClick={clearSignature}
+              className="border-gray-300"
             >
-              Batal
+              <X className="w-4 h-4 mr-1" />
+              Hapus
             </Button>
-            <Button
-              onClick={handleSubmitSignature}
-              disabled={!signature.trim()}
-              className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
-            >
-              <CheckCircle2 className="w-4 h-4 mr-2" />
-              Setuju & Tanda Tangan
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+          </div>
+        </div>
+
+        {/* Full name */}
+        <div className="space-y-2">
+          <Label htmlFor="fullName">Nama Lengkap *</Label>
+          <Input
+            id="fullName"
+            placeholder="Masukkan nama lengkap sesuai KTP"
+            value={signature}
+            onChange={(e) => setSignature(e.target.value)}
+            className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+          />
+        </div>
+
+        {/* Legal notice */}
+        <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+          <div className="flex gap-2">
+            <AlertCircle className="w-5 h-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-yellow-800">
+              <p>Dengan menandatangani kontrak ini, Anda menyetujui semua ketentuan yang tercantum dalam kontrak dan bersedia melaksanakan kewajiban sebagai pihak kedua.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="mt-4 flex justify-end gap-2">
+        <Button
+          variant="outline"
+          onClick={() => {
+            setShowSignatureDialog(false);
+            clearSignature();
+            setSignature('');
+            setSelectedContract(null);
+          }}
+        >
+          Batal
+        </Button>
+        <Button
+          onClick={handleSubmitSignature}
+          disabled={!signature.trim()}
+          className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+        >
+          <CheckCircle2 className="w-4 h-4 mr-2" />
+          Setuju & Tanda Tangan
+        </Button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
