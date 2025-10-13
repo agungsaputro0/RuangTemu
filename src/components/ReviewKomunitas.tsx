@@ -848,14 +848,14 @@ export function ReviewKomunitas() {
 
     {/* input komentar selalu di bawah modal */}
     <div className="p-4 border-t bg-white shrink-0">
-      <Label htmlFor="newReply">Tulis Balasan</Label>
+      <Label className="mb-2" htmlFor="newReply">Tulis Balasan</Label>
       <Textarea
         id="newReply"
         placeholder="Bagikan pengalaman atau saran Anda..."
         value={newReply}
         onChange={(e) => setNewReply(e.target.value)}
         rows={3}
-        className="border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+        className="border-[#F4E4C1] mt-1 focus-visible:ring-[#D4AF37]"
       />
       <div className="flex justify-end mt-2">
         <Button
