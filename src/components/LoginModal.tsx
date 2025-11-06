@@ -73,12 +73,12 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
         <div className="text-center mb-4 mt-4">
           <div className="w-15 h-10 mx-auto mb-3 flex items-center justify-center">
             <img
-              src="/assets/img/logo-icon.png"
+              src="/assets/img/logo-fix.png"
               alt="Ruang Temu Logo"
-              className="h-10 w-15"
+              className="h-20 w-20"
             />
           </div>
-          <h2 className="text-[#D4AF37]">{isLogin ? 'Selamat Datang Kembali' : 'Daftar Akun Baru'}</h2>
+          <h2 className="text-mainColor mt-8 font-bold">{isLogin ? 'Selamat Datang Kembali' : 'Daftar Akun Baru'}</h2>
           <p className="text-sm text-gray-600 mt-1">
             {isLogin ? 'Masuk untuk melanjutkan' : 'Bergabung dengan Ruang Temu'}
           </p>
@@ -93,12 +93,12 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
             onClick={() => setSelectedRole('couple')}
             className={`py-2 px-4 rounded-xl border-2 transition-all ${
               selectedRole === 'couple'
-                ? 'border-[#D4AF37] bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
+                ? 'border-mainColor bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
                 : 'border-gray-200 hover:border-[#FFB6C1]'
             }`}
           >
-            <Heart className={`w-5 h-5 mx-auto mb-1 ${selectedRole === 'couple' ? 'text-[#D4AF37]' : 'text-gray-400'}`} />
-            <p className={`text-sm ${selectedRole === 'couple' ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
+            <Heart className={`w-5 h-5 mx-auto mb-1 ${selectedRole === 'couple' ? 'text-mainColor' : 'text-gray-400'}`} />
+            <p className={`text-sm ${selectedRole === 'couple' ? 'text-mainColor' : 'text-gray-600'}`}>
               Calon Pengantin
             </p>
           </button>
@@ -108,12 +108,12 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
             onClick={() => setSelectedRole('vendor')}
             className={`py-2 px-4 rounded-xl border-2 transition-all ${
               selectedRole === 'vendor'
-                ? 'border-[#D4AF37] bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
+                ? 'border-mainColor bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
                 : 'border-gray-200 hover:border-[#FFB6C1]'
             }`}
           >
-            <Building2 className={`w-5 h-5 mx-auto mb-1 ${selectedRole === 'vendor' ? 'text-[#D4AF37]' : 'text-gray-400'}`} />
-            <p className={`text-sm ${selectedRole === 'vendor' ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
+            <Building2 className={`w-5 h-5 mx-auto mb-1 ${selectedRole === 'vendor' ? 'text-mainColor' : 'text-gray-400'}`} />
+            <p className={`text-sm ${selectedRole === 'vendor' ? 'text-mainColor' : 'text-gray-600'}`}>
               Penyedia Venue
             </p>
           </button>
@@ -153,7 +153,7 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
                     setSelectedRole('vendor');
                     setFormData({ ...formData, email: 'vendor@demo.com', password: 'demo123' });
                   }}
-                  className="flex-1 text-xs border-[#D4AF37] hover:bg-[#F4E4C1]/30"
+                  className="flex-1 text-xs border-mainColor hover:bg-[#F4E4C1]/30"
                 >
                   <Building2 className="w-3 h-3 mr-1" />
                   Penyedia Venue
@@ -203,7 +203,7 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                className="w-full bg-gradient-to-r from-mainColor to-[#FFB6C1] hover:brightness-90 text-white"
               >
                 {loading ? 'Memproses...' : 'Masuk'}
               </Button>
@@ -270,7 +270,7 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                className="w-full bg-gradient-to-r from-mainColor to-[#FFB6C1] hover:brightness-90 text-white"
               >
                 {loading ? 'Memproses...' : 'Daftar'}
               </Button>
@@ -282,7 +282,7 @@ export function LoginModal({ onClose, onSuccess }: LoginModalProps) {
         <div className="mt-4 text-center">
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-sm text-[#D4AF37] p-2 hover:text-appDarkPeach hover:bg-appGold/30 hover:rounded-md"
+            className="text-sm text-mainColor p-2 hover:text-appDarkPeach hover:bg-appGold/30 hover:rounded-md"
           >
             {isLogin ? 'Belum punya akun? Daftar sekarang' : 'Sudah punya akun? Masuk di sini'}
           </button>

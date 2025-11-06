@@ -4001,7 +4001,7 @@ html {
 
 @font-face {
   font-family: 'DancingScript';
-  src: url('./assets/font/DancingScript-Regular.ttf') format('truetype');
+  src: url('./assets/font/Rochester-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
@@ -4017,19 +4017,19 @@ html {
   
   /* Gaya untuk track scrollbar */
   ::-webkit-scrollbar-track {
-    background: #FEC5E5; /* Warna latar belakang track */
+    background: #9ea6f3ff; /* Warna latar belakang track */
   }
   
   /* Gaya untuk thumb scrollbar */
   ::-webkit-scrollbar-thumb {
-    background: #d4af37; /* Warna thumb scrollbar */
+    background: #323483; /* Warna thumb scrollbar */
     border-radius: 5px; /* Membuat thumb lebih bulat */
-    border: 2px solid #d4af37; /* Menambahkan border untuk kontras */
+    border: 2px solid #323483; /* Menambahkan border untuk kontras */
   }
   
   /* Gaya untuk thumb scrollbar saat di-hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #c77f48; /* Warna thumb saat di-hover */
+    background: #232483; /* Warna thumb saat di-hover */
   }
   
   /* Highlight tanggal terpilih */

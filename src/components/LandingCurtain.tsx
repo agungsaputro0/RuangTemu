@@ -1,0 +1,158 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import useIsMobile from "../hooks/UseIsMobile";
+import Button from "./atoms/Button";
+import { FaChevronDown } from "react-icons/fa";
+import { Navbar } from "./Navbar";
+import { useAuth } from "./AuthContext";
+
+type LandingProps = {
+  layoutMessage: string;
+  layoutTitle: string;
+  layoutSubtitle: string;
+  to?: string; // halaman tujuan
+};
+
+const LandingCurtain = (props: LandingProps) => {
+  const navigate = useNavigate();
+  const isMobile = useIsMobile();
+  const { layoutTitle, layoutSubtitle, layoutMessage, to = "/ruangtemu" } = props;
+  const [isLeaving, setIsLeaving] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const { user, isAuthenticated } = useAuth();
+
+  const handleOpenCurtain = () => {
+    if (isLeaving) return;
+    setIsLeaving(true);
+  };
+
+  const handleProtectedNavigation = (path: string) => {
+    const restricted = ["/negosiasi", "/akun"];
+    if (restricted.includes(path) && !isAuthenticated) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    if (path === "/vendor" && (!isAuthenticated || user?.role !== "vendor")) {
+      setShowLoginModal(true);
+      return;
+    }
+
+    navigate(path);
+  };
+
+  return (
+    <AnimatePresence>
+      {!isLeaving && (
+        <motion.div
+          className="fixed inset-0 z-[9999] bg-white overflow-hidden cursor-pointer"
+          onClick={handleOpenCurtain}
+          initial={{ y: 0 }}
+          animate={{ y: 0 }}
+          exit={{ y: "-100%" }}
+          transition={{ duration: 1.2, ease: "easeInOut" }}
+        >
+          <div className="flex flex-col w-full h-full">
+            <Navbar
+              currentPage={location.pathname.replace("/", "")}
+              onNavigate={handleProtectedNavigation}
+            />
+
+            <div className="flex-grow bg-ruangTemu bg-no-repeat bg-center bg-cover bg-fixed">
+              {/* MOBILE */}
+              {isMobile ? (
+                  <div className="relative w-full h-full flex flex-col items-center justify-center">
+                  {/* Background Image */}
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{
+                      backgroundImage: "url('/assets/img/banner-mobile.webp')",
+                    }}
+                  ></div>
+
+                  {/* Overlay gelap */}
+                  <div className="absolute inset-0 bg-black/60 z-0"></div>
+
+                  {/* Konten utama */}
+                  <div className="relative z-10 flex flex-col items-center justify-center flex-grow text-center px-6">
+                    <img
+                      src="/assets/img/logo-fix-white.png"
+                      alt="Logo"
+                      className="w-32 sm:w-40 object-contain drop-shadow-lg mb-6"
+                    />
+
+                    <h1 className="text-5xl sm:text-4xl font-dancingScript font-bold text-white drop-shadow-lg mb-3">
+                      Ruang Temu
+                    </h1>
+
+                    <p className="text-md mt-2 sm:text-lg text-white/90 font-poppins max-w-md">
+                      {layoutMessage}
+                    </p>
+                  </div>
+
+                  {/* Tombol di bawah */}
+                  <div className="relative z-10 w-full flex justify-center mb-10">
+                    <Button
+                      message=""
+                      onClick={handleOpenCurtain}
+                      variant="min-h-12 w-full mx-8 bg-secondColor hover:bg-mainColorHover text-white px-8 rounded-full font-poppins transition-all duration-300"
+                    >
+                      Eksplor Sekarang
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                /* DESKTOP */
+                <div className="flex flex-col lg:flex-row w-full h-full relative bg-cover bg-center">
+                  {/* Kiri */}
+                  <div className="flex flex-col justify-center items-start w-full lg:w-1/2 px-12 lg:px-16">
+                    <h1 className="text-4xl lg:text-5xl font-dancingScript font-bold text-mainColor leading-tight drop-shadow-lg">
+                      {layoutTitle} {layoutSubtitle}
+                    </h1>
+
+                    <p className="mt-4 text-lg text-rajutGray text-justify drop-shadow-md">
+                      {layoutMessage}
+                    </p>
+
+                    <div className="mt-8">
+                      <Button
+                        message=""
+                        onClick={handleOpenCurtain}
+                        variant="min-h-10 min-w-[200px] bg-mainColor hover:bg-mainColorHover text-white px-6 rounded-full font-poppins"
+                      >
+                        Eksplor Venue
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Kanan */}
+                  <div className="w-full lg:w-1/2 relative">
+                    <img
+                      src="/assets/img/blob.webp"
+                      alt="Blob Background"
+                      className="absolute top-0 left-0 w-full h-full object-contain rotate-90 z-0"
+                    />
+                    <img
+                      src="/assets/img/banner-image.webp"
+                      alt="Banner Image"
+                      className="absolute top-0 left-0 w-full h-full object-contain rounded-xl drop-shadow-lg z-10"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {!isMobile && (
+            <div className="absolute bottom-6 w-full flex justify-center gap-2 text-center text-mainColor font-bold text-sm animate-pulse">
+              Klik untuk melanjutkan <FaChevronDown className="mt-1" />
+            </div>
+            )}
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+export default LandingCurtain;

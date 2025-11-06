@@ -2,20 +2,28 @@ import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./index.html",
+    "src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       minHeight: {
-        'screen-default': 'calc(100vh - 4rem)',
-        'screen-half': 'calc(60vh - 4rem)',
+        "screen-default": "calc(100vh - 4rem)",
+        "screen-half": "calc(60vh - 4rem)",
+      },
+      width: {
+        navMenu: "calc(var(--spacing) * 34)",
       },
       screens: {
-        'smweb' : "772px",
+        smweb: "772px",
       },
       colors: {
+        mainColor: "#323483",
+        mainColorHover: "#1b1c4eff",
+        mainColorLite: "#9ea6f3ff",
+        mainColorLitest: "#c5cbfcff", 
+        secondColor: "#f16210",
+        greyColor: "#F4E4C1",
         appLitepink: "#fffefd",
         appLighterPink: "#ffd9e3ff",
         appPink: "#f03a6a",
@@ -43,31 +51,39 @@ const config: Config = {
         farmgreen: "#59a025",
         farmfreshgreen: "#7CFC00",
         farmgrassgreen: "#084724",
-        grid_4: "repeat(4, minmax(0, 1fr))",
       },
       fontSize: {
         sideBarIcon: "1.2em",
         normal: "1em",
       },
       fontFamily: {
-        poppins: ['Poppins', 'sans-serif'],
-        dancingScript: ['DancingScript', 'sans-serif'],
+        poppins: ["Poppins", "sans-serif"],
+        dancingScript: ["DancingScript", "sans-serif"],
       },
       animation: {
-        wave: 'wave 1s infinite ease-in-out',
+        wave: "wave 1s infinite ease-in-out",
       },
       keyframes: {
         wave: {
-          '0%, 100%': { transform: 'scaleY(0.3)' },
-          '50%': { transform: 'scaleY(1)' },
+          "0%, 100%": { transform: "scaleY(0.3)" },
+          "50%": { transform: "scaleY(1)" },
         },
       },
       backgroundImage: {
-        gradientJourney: "linear-gradient(to bottom, #F8E5E5, #F5C2C7)", 
-        gradientJourneyInNumber: "linear-gradient(to bottom, #FFFFFF, #F5C2C7)", 
-      }
+        ruangTemu: "linear-gradient(135deg, #c3d4ef, #ffd4b8)",
+        ruangTemuAmbient: "linear-gradient(to top, #c3d4ef, #ffd4b8, transparent)",
+        ruangTemuBold: "linear-gradient(135deg, #103158, #f16210)",
+        ruangTemuLight: "linear-gradient(to right, #a8b1fcff, #ffd4b8)",
+        gradientJourney: "linear-gradient(to bottom, #F8E5E5, #F5C2C7)",
+        gradientJourneyInNumber:
+          "linear-gradient(to bottom, #FFFFFF, #F5C2C7)",
+      },
+      gridTemplateColumns: {
+        grid_4: "repeat(4, minmax(0, 1fr))",
+      },
     },
   },
   plugins: [],
 };
+
 export default config;
