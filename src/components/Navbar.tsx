@@ -136,7 +136,8 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
                 </DropdownMenu>
               ) : (
                 <Button
-                  onClick={() => setShowLoginModal(true)}
+                  // onClick={() => setShowLoginModal(true)}
+                  onClick={() => onNavigate("login")}
                   className="bg-gradient-to-r w-36 from-[#D4AF37] to-[#FFB6C1] hover:brightness-95 text-white font-medium rounded-full px-5 py-2"
                   size="sm"
                 >

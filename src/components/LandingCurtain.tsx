@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import useIsMobile from "../hooks/UseIsMobile";
 import Button from "./atoms/Button";
-import { FaChevronDown } from "react-icons/fa";
+import { FaArrowRight, FaChevronDown } from "react-icons/fa";
 import { Navbar } from "./Navbar";
 import { useAuth } from "./AuthContext";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
@@ -96,24 +96,26 @@ return (
                     className="w-32 sm:w-40 object-contain drop-shadow-lg mb-6"
                   />
 
-                  <h1 className="text-5xl sm:text-4xl font-dancingScript font-bold text-white drop-shadow-lg mb-3">
+                  <h1 className="text-5xl pb-4 sm:text-4xl font-dancingScript font-bold text-white drop-shadow-lg mb-3">
                     Ruang Temu
                   </h1>
-
-                  <p className="text-md mt-2 sm:text-lg text-white/90 font-poppins max-w-md">
-                    {layoutMessage}
+                  <div className="w-80 h-[1px] bg-white"></div>
+                  <p className="text-[1.1em] mt-6 sm:text-lg text-white/90 font-poppins max-w-md">
+                    Temukan dan kelola venue acara secara cepat, transparan, dan fleksibel
                   </p>
                 </div>
 
                 {/* Tombol di bawah */}
-                <div className="relative z-10 w-full flex justify-center mb-10">
-                  <Button
-                    message=""
+                <div className="relative z-10 w-full flex justify-center mb-12">
+                 <button
                     onClick={handleOpenCurtain}
-                    variant="min-h-12 w-full mx-8 bg-secondColor hover:bg-mainColorHover text-white px-8 rounded-full font-poppins transition-all duration-300"
+                    className="w-full flex mx-6 items-center justify-between bg-secondColor hover:bg-mainColorHover text-white px-6 py-2 rounded-full font-poppins text-base transition-all duration-300"
                   >
-                    Eksplor Sekarang
-                  </Button>
+                    <span className="text-center">Mulai Sekarang</span>
+                    <span className="bg-white text-secondColor rounded-full p-3 -mr-4 shadow-md transition-all duration-300">
+                      <FaArrowRight className="text-lg" />
+                    </span>
+                  </button>
                 </div>
               </div>
             ) : (
@@ -147,7 +149,7 @@ return (
                         onClick={handleOpenCurtain}
                         variant="min-h-10 min-w-[200px] bg-mainColor hover:bg-mainColorHover text-white px-6 rounded-full font-poppins"
                       >
-                        Eksplor Sekarang
+                        Mulai Sekarang
                       </Button>
                     </div>
                     <div className="mt-10 w-full mb-20 flex sm:flex-row justify-center lg:justify-around items-center gap-8 text-center text-rajutGray font-light">

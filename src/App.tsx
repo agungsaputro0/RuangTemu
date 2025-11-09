@@ -266,6 +266,7 @@ import { LoginModal } from './components/LoginModal';
 import { Toaster } from './components/ui/sonner';
 import Footer from './components/Footer';
 import LandingCurtain from './components/LandingCurtain';
+import LoginForm from './components/LoginForm';
 
 function AppRoutes() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -332,6 +333,7 @@ function AppRoutes() {
           <Route path="/beranda" element={<Beranda onVenueClick={handleVenueClick} onNavigate={handleProtectedNavigation} />} />
           <Route path="/eksplor" element={<EksplorVenue onVenueClick={handleVenueClick} />} />
           <Route path="/estimator" element={<BudgetEstimator />} />
+          <Route path="/login" element={<LoginForm />} />
           <Route path="/negosiasi" element={<NegosiasiKontrak />} />
           <Route path="/review" element={<ReviewKomunitas />} />
           <Route path="/vendor" element={
