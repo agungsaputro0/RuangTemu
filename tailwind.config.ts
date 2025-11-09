@@ -8,7 +8,7 @@ const config: Config = {
   theme: {
     extend: {
       minHeight: {
-        "screen-default": "calc(100vh - 4rem)",
+        "screen-default": "calc(100dvh - 4rem)",
         "screen-half": "calc(60vh - 4rem)",
       },
       width: {
@@ -71,6 +71,7 @@ const config: Config = {
       },
       backgroundImage: {
         ruangTemu: "linear-gradient(135deg, #c3d4ef, #ffd4b8)",
+        ruangTemuBrown: "linear-gradient(120deg, rgba(91,68,53,0.7), rgba(216,196,177,0.6), rgba(244,233,221,0.5))",
         ruangTemuAmbient: "linear-gradient(to top, #c3d4ef, #ffd4b8, transparent)",
         ruangTemuBold: "linear-gradient(135deg, #103158, #f16210)",
         ruangTemuLight: "linear-gradient(to right, #a8b1fcff, #ffd4b8)",

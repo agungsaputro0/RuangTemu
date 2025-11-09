@@ -106,6 +106,7 @@ export function BudgetEstimator() {
     <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
+        <div className="mt-16"></div>
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#F4E4C1] to-[#FFE4E9] rounded-full mb-4">
             <Calculator className="w-4 h-4 text-[#D4AF37]" />

@@ -111,6 +111,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
             className="w-full h-full object-cover"
           />
         </div>
+        <div className="mt-16"></div>
         <div className="relative mt-28 sm:mt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full mb-6">
             <Sparkles className="w-4 h-4 text-mainColor" />

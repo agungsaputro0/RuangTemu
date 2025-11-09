@@ -316,15 +316,11 @@ function AppRoutes() {
     }
   }, [user?.role]);
 
-  if (!hasSeenOnboarding) {
-    return <OnboardingScreen onComplete={() => setHasSeenOnboarding(true)} />;
-  }
-
   return (
     <>
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen-default bg-white">
       <Navbar currentPage={location.pathname.replace('/', '')} onNavigate={handleProtectedNavigation} />
-      <main className="pb-20 lg:pb-0">
+      <main className="pb-20 lg:pb-0 -mt-16">
         <LandingCurtain 
           layoutTitle="Selamat Datang di Ruang Temu"  
           layoutSubtitle=""

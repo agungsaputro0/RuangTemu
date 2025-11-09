@@ -4001,7 +4001,7 @@ html {
 
 @font-face {
   font-family: 'DancingScript';
-  src: url('./assets/font/Rochester-Regular.ttf') format('truetype');
+  src: url('../assets/font/Rochester-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
