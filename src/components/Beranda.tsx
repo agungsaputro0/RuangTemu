@@ -135,10 +135,10 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
     <>
       <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full mb-6">
         <Sparkles className="w-4 h-4 text-mainColor" />
-        <span className="text-sm text-gray-600">Platform #1 untuk Venue Pernikahan</span>
+        <span className="text-sm text-gray-600">Platform #1 untuk Pencarian Venue</span>
       </div>
       <h1 className="text-4xl md:text-5xl lg:text-6xl font-dancingScript text-mainColor text-center mb-4">
-        Temukan Venue Lamaran & Pernikahan Impianmu
+        Temukan Venue Impianmu
       </h1>
       <p className="text-lg text-gray-600 text-center mb-10 max-w-2xl">
         Transparansi harga, negosiasi mudah, dan kontrak digital aman — semua dalam satu platform.
@@ -150,7 +150,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
   <>
   <div className="inline-flex items-center gap-2 px-4 py-2 z-10 bg-white/90 rounded-full mb-6">
         <Sparkles className="w-4 h-4 text-mainColor" />
-        <span className="text-sm text-gray-600">Platform #1 untuk Venue Pernikahan</span>
+        <span className="text-sm text-gray-600">Platform #1 untuk Pencarian Venue</span>
       </div>
   <div className="absolute top-0  w-[140%] h-[260px]">
     <div
@@ -340,7 +340,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center mb-12">
           <h2 className="mb-2">Fitur Unggulan Ruang Temu</h2>
-          <p className="text-gray-600">Teknologi terkini untuk memudahkan perjalanan pernikahan Anda</p>
+          <p className="text-gray-600">Teknologi terkini untuk memudahkan pencarian dan penemuan venue terbaik untuk Anda</p>
         </div>
         <div className="grid md:grid-cols-4 gap-6">
           <Card className="border-mainColorLite hover:shadow-xl transition-shadow">
