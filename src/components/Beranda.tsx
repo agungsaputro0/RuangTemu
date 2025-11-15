@@ -6,10 +6,12 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
 import { useAuth } from './AuthContext';
 import { LoginModal } from './LoginModal';
-import DatePicker from 'react-datepicker';
+import { GiDiamondRing, GiShoppingBag, GiPartyPopper, GiSoccerBall } from 'react-icons/gi';
+import { HiOutlinePresentationChartLine  } from 'react-icons/hi';
 import 'react-datepicker/dist/react-datepicker.css';
 import LandingCurtain from './LandingCurtain';
-
+import { DatePicker, Input as AntdInput, Button as AntdButton, Card as AntdCard } from "antd";
+import useIsMobile from '../hooks/UseIsMobile';
 
 const venues = [
   {
@@ -81,6 +83,14 @@ const testimonials = [
   },
 ];
 
+const categories = [
+  { name: "Seremonial", icon: <GiDiamondRing className="w-6 h-6 text-mainColor" /> },
+  { name: "Meeting", icon: <HiOutlinePresentationChartLine className="w-6 h-6 text-mainColor" /> },
+  { name: "Olahraga", icon: <GiSoccerBall className="w-6 h-6 text-mainColor" /> },
+  { name: "Bazaar", icon: <GiShoppingBag className="w-6 h-6 text-mainColor" /> },
+  { name: "Pesta", icon: <GiPartyPopper className="w-6 h-6 text-mainColor" /> },
+];
+
 interface BerandaProps {
   onVenueClick?: (venueId: number) => void;
   onNavigate?: (page: string) => void;
@@ -88,9 +98,15 @@ interface BerandaProps {
 
 export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
   const { isAuthenticated } = useAuth();
+  const isMobile = useIsMobile();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [startDate, setStartDate] = useState<Date | null>(null);
+  const [location, setLocation] = useState("");
+  const [isRange, setIsRange] = useState(false);
+  const [date, setDate] = useState(null);        // single
+  const [range, setRange] = useState<[any, any] | null>(null); // range
+  const [guest, setGuest] = useState<number | null>(null);
   const nextTestimonial = () => {
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
@@ -112,68 +128,212 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
           />
         </div>
         <div className="mt-16"></div>
-        <div className="relative mt-28 sm:mt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center items-center text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full mb-6">
-            <Sparkles className="w-4 h-4 text-mainColor" />
-            <span className="text-sm text-gray-600">Platform #1 untuk Venue Pernikahan</span>
-          </div>
-          <h1 className="text-4xl font-dancingScript md:text-5xl lg:text-6xl mb-6 max-w-4xl bg-ruangTemuBold bg-clip-text text-mainColor">
-            Temukan Venue Lamaran & <br></br> Pernikahan Impianmu
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl">
-            Transparansi harga, negosiasi mudah, dan kontrak digital aman <br></br> semua dalam satu platform
-          </p>
+       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col items-center">
 
-          {/* Search Bar */}
-          <Card className="w-full max-w-4xl shadow-xl border-mainColorLite">
-            <CardContent className="p-6">
-              <div className="grid md:grid-cols-4 gap-4">
-                <div className="md:col-span-1">
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg">
-                    <MapPin className="w-5 h-5 text-mainColor" />
-                    <Input
-                      placeholder="Lokasi"
-                      className="border-0 bg-transparent p-0 focus-visible:ring-0"
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-1">
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg">
-                    <Calendar className="w-5 h-5 text-mainColor" />
-                    <DatePicker
-                      selected={startDate}
-                      onChange={(date) => setStartDate(date)}
-                      placeholderText="Pilih tanggal"
-                      className="w-full p-2 focus:outline-none "
-                      dayClassName={(date) =>
-                        'text-gray-700 hover:bg-mainColor hover:text-white rounded-full'
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-1">
-                  <div className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-lg">
-                    <Users className="w-5 h-5 text-mainColor" />
-                    <Input
-                      placeholder="Jumlah Tamu"
-                      type="number"
-                      className="border-0 bg-transparent p-0 focus-visible:ring-0"
-                    />
-                  </div>
-                </div>
-                <div className="md:col-span-1">
-                  <Button 
-                    onClick={() => onNavigate?.('eksplor')}
-                    className="w-full h-full bg-ruangTemuLight hover:brightness-90  text-mainColor"
-                  >
-                    <Search className="w-5 h-5 mr-2 text-mainColor" />
-                    Cari Venue
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+  {/* Headline – disembunyikan di mobile */}
+  {!isMobile && (
+    <>
+      <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full mb-6">
+        <Sparkles className="w-4 h-4 text-mainColor" />
+        <span className="text-sm text-gray-600">Platform #1 untuk Venue Pernikahan</span>
+      </div>
+      <h1 className="text-4xl md:text-5xl lg:text-6xl font-dancingScript text-mainColor text-center mb-4">
+        Temukan Venue Lamaran & Pernikahan Impianmu
+      </h1>
+      <p className="text-lg text-gray-600 text-center mb-10 max-w-2xl">
+        Transparansi harga, negosiasi mudah, dan kontrak digital aman — semua dalam satu platform.
+      </p>
+    </>
+  )}
+
+  {isMobile && (
+  <>
+  <div className="inline-flex items-center gap-2 px-4 py-2 z-10 bg-white/90 rounded-full mb-6">
+        <Sparkles className="w-4 h-4 text-mainColor" />
+        <span className="text-sm text-gray-600">Platform #1 untuk Venue Pernikahan</span>
+      </div>
+  <div className="absolute top-0  w-[140%] h-[260px]">
+    <div
+      className="w-full h-full bg-ruangTemuBold"
+      style={{
+        borderBottomLeftRadius: "50% 60%",
+        borderBottomRightRadius: "50% 60%",
+      }}
+    />
+  </div>
+   </>
+)}
+
+  
+
+  {/* SEARCH CARD */}
+  <Card className="w-full max-w-8xl mx-auto shadow-xl border-0 rounded-2xl p-4 mb-10 bg-white/95 backdrop-blur">
+  <div className={`${isMobile ? "flex flex-col gap-3" : "grid grid-cols-4 gap-4"}`}>
+
+    {/* LOCATION */}
+    <div className="flex items-center gap-2 bg-gray-50 px-4 h-14 rounded-xl border border-gray-200">
+      <MapPin className="w-5 h-5 text-mainColor" />
+      <AntdInput
+        placeholder="Lokasi"
+        value={location}
+        onChange={(e) => setLocation(e.target.value)}
+        className="border-0 bg-transparent p-0 text-sm focus:ring-0"
+      />
+    </div>
+
+    {/* DATE FIELD (WRAPPER GRID) */}
+<div className="grid grid-cols-[1fr_auto] items-center bg-gray-50 px-4 h-14 rounded-xl border border-gray-200">
+
+  {/* LEFT: ICON + DATE INPUT */}
+  <div className="flex items-center gap-2 w-full overflow-hidden">
+
+    <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
+
+    {/* SINGLE DATE */}
+    {!isRange && (
+      <DatePicker
+        format="DD-MM-YYYY"
+        value={date}
+        onChange={(d) => setDate(d)}
+        placeholder="Tanggal"
+        className="
+          w-full border-0 bg-transparent
+          [&_.ant-picker-suffix]:hidden 
+          [&_.ant-picker-clear]:hidden 
+          [&>.ant-picker-input>input]:text-sm
+          h-full
+        "
+        popupClassName="scale-95 origin-top"
+        style={{ background: "transparent", border: "none", height: "100%" }}
+      />
+    )}
+
+    {/* RANGE DATE */}
+    {isRange && (
+      <DatePicker.RangePicker
+        format="DD-MM-YYYY"
+        value={range}
+        onChange={(val) => setRange(val)}
+        placeholder={["Mulai", "Selesai"]}
+        className="
+          w-full border-0 bg-transparent 
+          [&_.ant-picker-suffix]:hidden 
+          [&_.ant-picker-clear]:hidden 
+          [&>.ant-picker-input>input]:text-sm
+          h-full
+        "
+        popupClassName="scale-95 origin-top"
+        style={{ background: "transparent", border: "none", height: "100%" }}
+      />
+    )}
+
+  </div>
+
+  {/* RIGHT: TOGGLE SWITCH */}
+  <div className="flex flex-col items-center justify-center ml-2">
+    <span className="text-[9px] leading-none text-gray-500 mb-1">
+      Mode
+    </span>
+
+    <div
+      onClick={() => setIsRange(!isRange)}
+      className={`
+        w-12 h-5 rounded-full p-1 
+        flex items-center cursor-pointer transition-all
+         ${isRange ? "bg-mainColor" : "bg-gray-200"}
+      `}
+    >
+      <div
+        className={`
+          w-3.5 h-3.5 rounded-full  transition-all duration-300
+          ${isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"}
+        `}
+      />
+    </div>
+
+    <span className="text-[9px] leading-none text-gray-500 mt-1">
+      {isRange ? "Range" : "Single"}
+    </span>
+  </div>
+
+</div>
+
+
+
+    {/* GUEST */}
+    <div className="flex items-center gap-2 bg-gray-50 px-4 h-14 rounded-xl border border-gray-200">
+      <Users className="w-5 h-5 text-mainColor" />
+      <AntdInput
+        placeholder="Jumlah Tamu"
+        type="number"
+        value={guest ?? ""}
+        onChange={(e) => setGuest(Number(e.target.value))}
+        className="border-0 bg-transparent p-0 text-sm focus:ring-0"
+      />
+    </div>
+
+    {/* BUTTON */}
+    <Button
+      onClick={() => onNavigate?.("eksplor")}
+      className="
+        w-full h-14 bg-mainColor text-white hover:bg-secondColor 
+        rounded-xl font-medium text-sm flex items-center justify-center gap-2
+      "
+    >
+      <Search className="w-4 h-4" />
+      Cari Venue
+    </Button>
+
+  </div>
+</Card>
+
+
+
+  {/* CATEGORIES */}
+<div className="w-full max-w-5xl mx-auto">
+  {isMobile ? (
+    <div className="grid grid-cols-2 gap-3">
+      {categories.map((cat) => (
+        <button
+          key={cat.name}
+          className="
+            flex items-center justify-center gap-2 
+            w-full h-12 rounded-full border bg-white 
+            border-gray-200 hover:border-mainColorLite 
+            shadow-sm hover:shadow transition-all duration-200
+          "
+        >
+          <span className="text-mainColor text-lg">{cat.icon}</span>
+          <span className="text-sm font-medium text-gray-700">{cat.name}</span>
+        </button>
+      ))}
+    </div>
+  ) : (
+    <div className="flex overflow-x-auto gap-3 pb-4 snap-x snap-mandatory hide-scrollbar justify-center">
+      {categories.map((cat) => (
+        <div key={cat.name} className="snap-start flex-shrink-0">
+          <button
+            className="
+              flex items-center justify-center gap-2 
+              w-40 h-12 rounded-full border bg-white 
+              border-gray-200 hover:border-mainColorLite 
+              shadow-sm hover:shadow transition-all duration-200
+            "
+          >
+            <span className="text-mainColor text-lg">{cat.icon}</span>
+            <span className="text-sm font-medium text-gray-700">{cat.name}</span>
+          </button>
         </div>
+      ))}
+    </div>
+  )}
+</div>
+
+
+
+</div>
+
+
       </section>
 
       {/* Features Section */}

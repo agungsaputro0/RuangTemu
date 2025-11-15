@@ -36,7 +36,7 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
   const menuItems = getMenuItems();
 
   return (
-    <nav className="lg:hidden fixed py-1 bottom-0 left-0 right-0 z-50 bg-white border-t border-[#F4E4C1] shadow-lg safe-area-bottom">
+    <nav className="lg:hidden fixed py-1 bottom-0 left-0 right-0 z-50 bg-mainColorLitest border-t border-[#F4E4C1] shadow-lg safe-area-bottom">
       <div className="flex justify-around items-center py-2 relative">
         {menuItems.map((item) => {
           const Icon = item.icon;
