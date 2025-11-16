@@ -56,18 +56,10 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
               className="flex items-center gap-2 cursor-pointer select-none"
             >
               <img
-                src="/assets/img/logo-fix.png"
+                src="/assets/img/logo-long.png"
                 alt="Ruang Temu Logo"
-                className="h-10 w-15"
+                className="h-14 w-25"
               />
-              <div className="flex font-spring flex-col leading-tight text-mainColor">
-                <span className="text-mainColor font-dancing text-2xl font-bold">
-                  Ruang Temu
-                </span>
-                <small className="text-[0.7em]">
-                    Temukan Venue Impianmu
-                </small>
-               </div>
             </div>
 
             {/* === MENU TENGAH === */}
@@ -84,7 +76,7 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
                     className={`w-navMenu text-center py-2 rounded-full text-sm font-medium transition-all duration-300
                       ${
                         isActive
-                          ? "bg-ruangTemuLight text-mainColor shadow-sm"
+                          ? "bg-ruangTemuBold text-white shadow-sm"
                           : "text-gray-600 hover:bg-appLighterPink/80 hover:text-[#B8941F]"
                       }`}
                   >
@@ -138,7 +130,7 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
                 <Button
                   // onClick={() => setShowLoginModal(true)}
                   onClick={() => onNavigate("login")}
-                  className="bg-gradient-to-r w-36 from-[#D4AF37] to-[#FFB6C1] hover:brightness-95 text-white font-medium rounded-full px-5 py-2"
+                  className="bg-ruangTemuBold w-36 hover:bg-ruangTemuLight hover:text-mainColor text-white font-medium rounded-full px-5 py-2"
                   size="sm"
                 >
                   Login

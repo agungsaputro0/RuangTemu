@@ -1,4 +1,4 @@
-import { Search, MapPin, DollarSign, Users, Star, Sparkles, SlidersHorizontal, Heart, Eye } from 'lucide-react';
+import { Search, MapPin, DollarSign, Users, Star, Sparkles, SlidersHorizontal, Heart, Eye, Calendar } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
@@ -12,6 +12,9 @@ import { AIMatchmaker } from './AIMatchmaker';
 import { PaymentIntegration } from './PaymentIntegration';
 import * as SliderPrimitive from '@radix-ui/react-slider';
 import { FaRegStar, FaStar, FaStarHalfAlt } from "react-icons/fa";
+import LocationInputDropdown from './atoms/LocationInputDropdown';
+import { Dayjs } from 'dayjs';
+import { DatePicker, Input as AntdInput } from "antd";
 
 const allVenues = [
   {
@@ -103,7 +106,11 @@ export function EksplorVenue({ onVenueClick }: EksplorVenueProps) {
   const [showPayment, setShowPayment] = useState(false);
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
- 
+  const [location, setLocation] = useState("");
+  const [isRange, setIsRange] = useState(false);
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [range, setRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
+  const [guest, setGuest] = useState<number | null>(null);
   
    const handleClick = (event: React.MouseEvent<HTMLButtonElement>, star: number) => {
     const { left, width } = event.currentTarget.getBoundingClientRect();
@@ -128,149 +135,214 @@ export function EksplorVenue({ onVenueClick }: EksplorVenueProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+   <div className="relative min-h-screen z-0 overflow-visible">
+      {/* Background Header Gradient — pakai z-0 (bukan negative z) */}
+      {/* Ganti bg-mainColor sementara dengan bg-blue-500 untuk test; kembalikan ke bg-mainColor setelah terlihat */}
+      <div
+        aria-hidden
+        className="absolute top-16 left-0 w-full h-[32vh] md:h-[28vh] bg-ruangTemuBold z-0"
+      />
+
+      {/* CONTENT wrapper — harus berada di atas background (z-10) */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
         {/* Header */}
         <div className="mt-16"></div>
         <div className="mb-8">
-          <h1 className="mb-2">Eksplor Venue</h1>
-          <p className="text-gray-600">Temukan venue impian dengan filter dan AI Matchmaker</p>
+          <h1 className="mb-2 text-3xl font-dancingScript font-bold text-white">Eksplor Venue</h1>
+          <p className="text-white">Temukan venue impian dengan filter dan AI Matchmaker</p>
         </div>
 
         {/* Search & AI Matchmaker */}
-        <div className="grid md:grid-cols-3 gap-4 mb-8">
-          <div className="md:col-span-2">
-            <div className="flex gap-2">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <Input
-                  placeholder="Cari venue berdasarkan nama atau lokasi..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10 border-[#F4E4C1]"
-                />
+        <div className="flex flex-col gap-4 mb-8 bg-ruangTemu p-10 rounded-xl">
+          {/* ROW 1: Location, Date, Guest */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {/* LOCATION */}
+            <LocationInputDropdown
+              location={location}
+              setLocation={setLocation}
+            />
+
+            {/* DATE */}
+            <div className="grid grid-cols-[1fr_auto] items-center bg-gray-50 px-4 rounded-lg border border-gray-200">
+              <div className="flex items-center gap-2 w-full overflow-hidden">
+                <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
+                {!isRange && (
+                  <DatePicker
+                    format="DD-MM-YYYY"
+                    value={date}
+                    onChange={(d) => setDate(d)}
+                    placeholder="Tanggal"
+                    className="w-full border-0 bg-transparent h-full text-sm"
+                    popupClassName="scale-95 origin-top"
+                  />
+                )}
+                {isRange && (
+                  <DatePicker.RangePicker
+                    format="DD-MM-YYYY"
+                    value={range}
+                    onChange={(val) => setRange(val)}
+                    placeholder={["Mulai", "Selesai"]}
+                    className="w-full border-0 bg-transparent h-full text-sm"
+                    popupClassName="scale-95 origin-top"
+                  />
+                )}
               </div>
-              <Button
-                variant="outline"
-                onClick={() => setShowFilters(!showFilters)}
-                className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F4E4C1]/30"
+              <div
+                onClick={() => setIsRange(!isRange)}
+                className={`w-12 h-5 rounded-full p-1 flex items-center cursor-pointer transition-all ${isRange ? "bg-mainColor" : "bg-gray-200"}`}
               >
-                <SlidersHorizontal className="w-5 h-5 mr-2" />
-                Filter
-              </Button>
+                <div className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"}`} />
+              </div>
+            </div>
+
+            {/* GUEST */}
+            <div className="flex items-center gap-2 bg-gray-50 px-4 rounded-lg border border-gray-200">
+              <Users className="w-5 h-5 text-mainColor" />
+              <AntdInput
+                placeholder="Jumlah Tamu"
+                type="number"
+                min={1}
+                value={guest ?? ""}
+                onChange={(e) => setGuest(Number(e.target.value))}
+                className="border-0 bg-transparent p-0 text-sm focus:ring-0 w-full"
+              />
             </div>
           </div>
-          <Button 
-            onClick={() => setShowAIMatchmaker(true)}
-            className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
-          >
-            <Sparkles className="w-5 h-5 mr-2" />
-            AI Matchmaker
-          </Button>
+
+          {/* ROW 2: Filter + AI Matchmaker */}
+          <div className="flex flex-col md:flex-row gap-3 mt-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex-1 bg-ruangTemuBold text-white hover:bg-ruangTemuLight hover:border-mainColor hover:text-mainColor h-12 flex items-center justify-center gap-2"
+            >
+              <SlidersHorizontal className="w-5 h-5" />
+              Filter
+            </Button>
+
+            <Button 
+              onClick={() => setShowAIMatchmaker(true)}
+              className="flex-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white h-12 flex items-center justify-center gap-2"
+            >
+              <Sparkles className="w-5 h-5" />
+              AI Matchmaker
+            </Button>
+          </div>
         </div>
 
-        {/* Filters */}
-        {showFilters && (
-          <Card className="mb-8 border-[#F4E4C1]">
-            <CardContent className="p-6">
-              <div className="grid md:grid-cols-4 gap-6">
-                <div>
-                  <label className="block mb-2 text-sm">Lokasi</label>
-                  <Select>
-                    <SelectTrigger className="border-[#F4E4C1]">
-                      <SelectValue placeholder="Pilih Lokasi" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="jakarta-pusat">Jakarta Pusat</SelectItem>
-                      <SelectItem value="jakarta-selatan">Jakarta Selatan</SelectItem>
-                      <SelectItem value="jakarta-barat">Jakarta Barat</SelectItem>
-                      <SelectItem value="tangerang">Tangerang</SelectItem>
-                      <SelectItem value="bekasi">Bekasi</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm">Kapasitas</label>
-                  <Select>
-                    <SelectTrigger className="border-[#F4E4C1]">
-                      <SelectValue placeholder="Jumlah Tamu" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="50-100">50-100 tamu</SelectItem>
-                      <SelectItem value="100-200">100-200 tamu</SelectItem>
-                      <SelectItem value="200-500">200-500 tamu</SelectItem>
-                      <SelectItem value="500+">500+ tamu</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="block mb-2 text-sm">Tema</label>
-                  <Select>
-                    <SelectTrigger className="border-[#F4E4C1]">
-                      <SelectValue placeholder="Pilih Tema" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="luxury">Luxury</SelectItem>
-                      <SelectItem value="garden">Garden</SelectItem>
-                      <SelectItem value="modern">Modern</SelectItem>
-                      <SelectItem value="intimate">Intimate</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
 
-               <div>
-      <label className="block mb-2 text-sm">Rating</label>
-      <div className="flex space-x-1">
-        {[1, 2, 3, 4, 5].map((star) => {
-          const value = hover ?? rating; // kalau hover null, gunakan rating
-          let icon;
-          if (value >= star) icon = <FaStar size={24} className="text-yellow-400" />;
-          else if (value + 0.5 >= star) icon = <FaStarHalfAlt size={24} className="text-yellow-400" />;
-          else icon = <FaRegStar size={24} className="text-gray-300" />;
 
-          return (
-            <button
-              key={star}
-              type="button"
-              className="focus:outline-none"
-              onMouseMove={(e) => handleMouseMove(e, star)}
-              onClick={(e) => handleClick(e, star)}
-              onMouseLeave={() => setHover(null)} // reset hover
-            >
-              {icon}
-            </button>
-          );
-        })}
-      </div>
-      <p className="mt-1 text-sm text-gray-500">Rating: {rating} Bintang</p>
-    </div>
-                
-                </div>
-              <div className="mt-6">
-                <label className="block mb-3 text-sm">
-                  Rentang Harga: 
-                  <span className="text-[#D4AF37]">
-                    {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
-                  </span>
-                </label>
-                <SliderPrimitive.Root
-                  className="relative flex items-center select-none touch-none w-full h-5"
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  min={0}
-                  max={50000000}
-                  step={1000000}
-                >
-                  <SliderPrimitive.Track className="bg-gray-300 relative flex-1 h-1 rounded-full">
-                    <SliderPrimitive.Range className="absolute bg-[#D4AF37] rounded-full h-full" />
-                  </SliderPrimitive.Track>
-                  <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md" />
-                  <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md" />
-                </SliderPrimitive.Root>
+                {/* Filters */}
+                {showFilters && (
+                <Card className="mb-8 border border-[#F4E4C1] rounded-2xl shadow-sm bg-white/90 backdrop-blur-sm">
+          <CardContent className="p-6">
+            <div className="grid md:grid-cols-4 gap-6">
 
+              {/* TIPE VENUE */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">Tipe Venue</label>
+                <Select>
+                  <SelectTrigger className="border border-[#F4E4C1] rounded-lg h-10">
+                    <SelectValue placeholder="Pilih Tipe" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="indoor">Indoor</SelectItem>
+                    <SelectItem value="outdoor">Outdoor</SelectItem>
+                    <SelectItem value="mixed">Indoor + Outdoor</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
-            </CardContent>
-          </Card>
+
+              {/* FASILITAS */}
+              <div className="col-span-2">
+                <label className="block mb-2 text-sm font-medium text-gray-700">Fasilitas</label>
+                <div className="flex flex-wrap gap-2">
+                  {["Parkir",
+                    "Wi-Fi",
+                    "Panggung",
+                    "Catering",
+                    "Akses Difabel",
+                    "Lapangan",
+                    "Proyektor",
+                    "Meja & Kursi",
+                    "Sound System",
+                    "AC",
+                    "Booth / Stand",
+                    "Listrik",
+                    "Dekorasi",
+                    "Pencahayaan"].map((f) => (
+                    <label 
+                      key={f} 
+                      className="flex items-center gap-2 cursor-pointer text-md"
+                    >
+                      <input 
+                        type="checkbox" 
+                        className="hidden peer" 
+                      />
+                      <span className="px-3 py-1 rounded-full border border-gray-300 peer-checked:bg-[#D4AF37] peer-checked:text-white transition-all cursor-pointer">
+                        {f}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* RATING */}
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-700">Rating</label>
+                <div className="flex items-center space-x-1">
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    const value = hover ?? rating;
+                    let icon;
+                    if (value >= star) icon = <FaStar size={20} className="text-yellow-400" />;
+                    else if (value + 0.5 >= star) icon = <FaStarHalfAlt size={20} className="text-yellow-400" />;
+                    else icon = <FaRegStar size={30} className="text-gray-300" />;
+                    return (
+                      <button
+                        key={star}
+                        type="button"
+                        className="focus:outline-none"
+                        onMouseMove={(e) => handleMouseMove(e, star)}
+                        onClick={(e) => handleClick(e, star)}
+                        onMouseLeave={() => setHover(null)}
+                      >
+                        {icon}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="mt-1 text-xs text-gray-500">Rating: {rating} Bintang</p>
+              </div>
+
+            </div>
+
+            {/* RENTANG HARGA */}
+            <div className="mt-6">
+              <label className="block mb-3 text-sm font-medium text-gray-700">
+                Rentang Harga:{" "}
+                <span className="text-[#D4AF37] font-semibold">
+                  {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
+                </span>
+              </label>
+              <SliderPrimitive.Root
+                className="relative flex items-center select-none touch-none w-full h-4"
+                value={priceRange}
+                onValueChange={setPriceRange}
+                min={0}
+                max={50000000}
+                step={1000000}
+              >
+                <SliderPrimitive.Track className="bg-gray-200 relative flex-1 h-1 rounded-full">
+                  <SliderPrimitive.Range className="absolute bg-[#D4AF37] rounded-full h-full" />
+                </SliderPrimitive.Track>
+                <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md ring-2 ring-white" />
+                <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md ring-2 ring-white" />
+              </SliderPrimitive.Root>
+            </div>
+          </CardContent>
+        </Card>
+
         )}
 
         {/* Results Count */}

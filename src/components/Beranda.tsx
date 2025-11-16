@@ -12,6 +12,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import LandingCurtain from './LandingCurtain';
 import { DatePicker, Input as AntdInput, Button as AntdButton, Card as AntdCard } from "antd";
 import useIsMobile from '../hooks/UseIsMobile';
+import LocationInputDropdown from './atoms/LocationInputDropdown';
+import TestimonialSection from './TestimonialSection';
+import { Dayjs } from 'dayjs';
+import { encryptData } from '../hooks/UseEncryptor';
 
 const venues = [
   {
@@ -104,16 +108,34 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [location, setLocation] = useState("");
   const [isRange, setIsRange] = useState(false);
-  const [date, setDate] = useState(null);        // single
-  const [range, setRange] = useState<[any, any] | null>(null); // range
+  const [date, setDate] = useState<Dayjs | null>(null);
+  const [range, setRange] = useState<[Dayjs | null, Dayjs | null] | null>(null);
   const [guest, setGuest] = useState<number | null>(null);
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  
+  const handleCariVenue = () => {
+    // Buat object data untuk dikirim
+    const data = {
+      fromSearch: true,
+      location: location || "",
+      date: date?.toISOString() || "",
+      range: range ? [range[0]?.toISOString(), range[1]?.toISOString()] : null,
+      guest: guest || 1,
+    };
+
+    // Ubah ke JSON string
+    const jsonString = JSON.stringify(data);
+
+    // Encrypt data
+    const encrypted = encryptData(jsonString);
+
+    // Encode supaya aman di URL
+    const encoded = encodeURIComponent(encrypted);
+
+    // Navigate dengan parameter terenkripsi
+    onNavigate?.(`/eksplor?data=${encoded}`);
   };
 
-  const prevTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
@@ -130,39 +152,39 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
         <div className="mt-16"></div>
        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col items-center">
 
-  {/* Headline – disembunyikan di mobile */}
-  {!isMobile && (
+    {/* Headline – disembunyikan di mobile */}
+    {!isMobile && (
+      <>
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full mb-6">
+          <Sparkles className="w-4 h-4 text-mainColor" />
+          <span className="text-sm text-gray-600">Platform #1 untuk Pencarian Venue</span>
+        </div>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-dancingScript text-mainColor text-center mb-4">
+          Temukan Venue Impianmu
+        </h1>
+        <p className="text-lg text-gray-600 text-center mb-10 max-w-2xl">
+          Transparansi harga, negosiasi mudah, dan kontrak digital aman — semua dalam satu platform.
+        </p>
+      </>
+    )}
+
+    {isMobile && (
     <>
-      <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/90 rounded-full mb-6">
-        <Sparkles className="w-4 h-4 text-mainColor" />
-        <span className="text-sm text-gray-600">Platform #1 untuk Pencarian Venue</span>
-      </div>
-      <h1 className="text-4xl md:text-5xl lg:text-6xl font-dancingScript text-mainColor text-center mb-4">
-        Temukan Venue Impianmu
-      </h1>
-      <p className="text-lg text-gray-600 text-center mb-10 max-w-2xl">
-        Transparansi harga, negosiasi mudah, dan kontrak digital aman — semua dalam satu platform.
-      </p>
+    <div className="inline-flex items-center gap-2 px-4 py-2 z-10 bg-white/90 rounded-full mb-6">
+          <Sparkles className="w-4 h-4 text-mainColor" />
+          <span className="text-sm text-gray-600">Platform #1 untuk Pencarian Venue</span>
+        </div>
+    <div className="absolute top-0  w-[140%] h-[260px]">
+      <div
+        className="w-full h-full bg-ruangTemuBold"
+        style={{
+          borderBottomLeftRadius: "50% 60%",
+          borderBottomRightRadius: "50% 60%",
+        }}
+      />
+    </div>
     </>
   )}
-
-  {isMobile && (
-  <>
-  <div className="inline-flex items-center gap-2 px-4 py-2 z-10 bg-white/90 rounded-full mb-6">
-        <Sparkles className="w-4 h-4 text-mainColor" />
-        <span className="text-sm text-gray-600">Platform #1 untuk Pencarian Venue</span>
-      </div>
-  <div className="absolute top-0  w-[140%] h-[260px]">
-    <div
-      className="w-full h-full bg-ruangTemuBold"
-      style={{
-        borderBottomLeftRadius: "50% 60%",
-        borderBottomRightRadius: "50% 60%",
-      }}
-    />
-  </div>
-   </>
-)}
 
   
 
@@ -170,93 +192,88 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
   <Card className="w-full max-w-8xl mx-auto shadow-xl border-0 rounded-2xl p-4 mb-10 bg-white/95 backdrop-blur">
   <div className={`${isMobile ? "flex flex-col gap-3" : "grid grid-cols-4 gap-4"}`}>
 
-    {/* LOCATION */}
-    <div className="flex items-center gap-2 bg-gray-50 px-4 h-14 rounded-xl border border-gray-200">
-      <MapPin className="w-5 h-5 text-mainColor" />
-      <AntdInput
-        placeholder="Lokasi"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border-0 bg-transparent p-0 text-sm focus:ring-0"
-      />
-    </div>
+    <LocationInputDropdown
+      location={location}
+      setLocation={setLocation}
+    />
+
 
     {/* DATE FIELD (WRAPPER GRID) */}
-<div className="grid grid-cols-[1fr_auto] items-center bg-gray-50 px-4 h-14 rounded-xl border border-gray-200">
+    <div className="grid grid-cols-[1fr_auto] items-center bg-gray-50 px-4 h-14 rounded-xl border border-gray-200">
 
-  {/* LEFT: ICON + DATE INPUT */}
-  <div className="flex items-center gap-2 w-full overflow-hidden">
+      {/* LEFT: ICON + DATE INPUT */}
+      <div className="flex items-center gap-2 w-full overflow-hidden">
 
-    <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
+        <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
 
-    {/* SINGLE DATE */}
-    {!isRange && (
-      <DatePicker
-        format="DD-MM-YYYY"
-        value={date}
-        onChange={(d) => setDate(d)}
-        placeholder="Tanggal"
-        className="
-          w-full border-0 bg-transparent
-          [&_.ant-picker-suffix]:hidden 
-          [&_.ant-picker-clear]:hidden 
-          [&>.ant-picker-input>input]:text-sm
-          h-full
-        "
-        popupClassName="scale-95 origin-top"
-        style={{ background: "transparent", border: "none", height: "100%" }}
-      />
-    )}
+        {/* SINGLE DATE */}
+        {!isRange && (
+          <DatePicker
+            format="DD-MM-YYYY"
+            value={date}
+            onChange={(d) => setDate(d)}
+            placeholder="Tanggal"
+            className="
+              w-full border-0 bg-transparent
+              [&_.ant-picker-suffix]:hidden 
+              [&_.ant-picker-clear]:hidden 
+              [&>.ant-picker-input>input]:text-sm
+              h-full
+            "
+            popupClassName="scale-95 origin-top"
+            style={{ background: "transparent", border: "none", height: "100%" }}
+          />
+        )}
 
-    {/* RANGE DATE */}
-    {isRange && (
-      <DatePicker.RangePicker
-        format="DD-MM-YYYY"
-        value={range}
-        onChange={(val) => setRange(val)}
-        placeholder={["Mulai", "Selesai"]}
-        className="
-          w-full border-0 bg-transparent 
-          [&_.ant-picker-suffix]:hidden 
-          [&_.ant-picker-clear]:hidden 
-          [&>.ant-picker-input>input]:text-sm
-          h-full
-        "
-        popupClassName="scale-95 origin-top"
-        style={{ background: "transparent", border: "none", height: "100%" }}
-      />
-    )}
+        {/* RANGE DATE */}
+        {isRange && (
+          <DatePicker.RangePicker
+            format="DD-MM-YYYY"
+            value={range}
+            onChange={(val) => setRange(val)}
+            placeholder={["Mulai", "Selesai"]}
+            className="
+              w-full border-0 bg-transparent 
+              [&_.ant-picker-suffix]:hidden 
+              [&_.ant-picker-clear]:hidden 
+              [&>.ant-picker-input>input]:text-sm
+              h-full
+            "
+            popupClassName="scale-95 origin-top"
+            style={{ background: "transparent", border: "none", height: "100%" }}
+          />
+        )}
 
-  </div>
+      </div>
 
-  {/* RIGHT: TOGGLE SWITCH */}
-  <div className="flex flex-col items-center justify-center ml-2">
-    <span className="text-[9px] leading-none text-gray-500 mb-1">
-      Mode
-    </span>
+      {/* RIGHT: TOGGLE SWITCH */}
+      <div className="flex flex-col items-center justify-center ml-2">
+        <span className="text-[9px] leading-none text-gray-500 mb-1">
+          Mode
+        </span>
 
-    <div
-      onClick={() => setIsRange(!isRange)}
-      className={`
-        w-12 h-5 rounded-full p-1 
-        flex items-center cursor-pointer transition-all
-         ${isRange ? "bg-mainColor" : "bg-gray-200"}
-      `}
-    >
-      <div
-        className={`
-          w-3.5 h-3.5 rounded-full  transition-all duration-300
-          ${isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"}
-        `}
-      />
+        <div
+          onClick={() => setIsRange(!isRange)}
+          className={`
+            w-12 h-5 rounded-full p-1 
+            flex items-center cursor-pointer transition-all
+            ${isRange ? "bg-mainColor" : "bg-gray-200"}
+          `}
+        >
+          <div
+            className={`
+              w-3.5 h-3.5 rounded-full  transition-all duration-300
+              ${isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"}
+            `}
+          />
+        </div>
+
+        <span className="text-[9px] leading-none text-gray-500 mt-1">
+          {isRange ? "Range" : "Single"}
+        </span>
+      </div>
+
     </div>
-
-    <span className="text-[9px] leading-none text-gray-500 mt-1">
-      {isRange ? "Range" : "Single"}
-    </span>
-  </div>
-
-</div>
 
 
 
@@ -266,6 +283,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
       <AntdInput
         placeholder="Jumlah Tamu"
         type="number"
+        min={1}
         value={guest ?? ""}
         onChange={(e) => setGuest(Number(e.target.value))}
         className="border-0 bg-transparent p-0 text-sm focus:ring-0"
@@ -274,9 +292,9 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
 
     {/* BUTTON */}
     <Button
-      onClick={() => onNavigate?.("eksplor")}
+      onClick={handleCariVenue}
       className="
-        w-full h-14 bg-mainColor text-white hover:bg-secondColor 
+        w-full h-14 bg-ruangTemuBold text-white hover:bg-secondColor 
         rounded-xl font-medium text-sm flex items-center justify-center gap-2
       "
     >
@@ -301,6 +319,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
             w-full h-12 rounded-full border bg-white 
             border-gray-200 hover:border-mainColorLite 
             shadow-sm hover:shadow transition-all duration-200
+            hover:bg-mainColorLite
           "
         >
           <span className="text-mainColor text-lg">{cat.icon}</span>
@@ -316,6 +335,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
             className="
               flex items-center justify-center gap-2 
               w-40 h-12 rounded-full border bg-white 
+              hover:bg-mainColorLite
               border-gray-200 hover:border-mainColorLite 
               shadow-sm hover:shadow transition-all duration-200
             "
@@ -386,20 +406,23 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
       </section>
 
       {/* Promo Banner */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="bg-gradient-to-r from-mainColor to-[#FFB6C1] rounded-2xl p-8 text-white text-center">
+      <section className="w-full bg-ruangTemu">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="bg-ruangTemuBold rounded-2xl p-8 text-white text-center">
           <h3 className="mb-2">🎉 Promo Spesial Bulan Ini!</h3>
           <p className="mb-4">Dapatkan diskon hingga 20% untuk booking venue di bulan Oktober 2025</p>
           <Button variant="secondary" className="bg-white text-mainColor hover:bg-gray-100">
             Lihat Promo
           </Button>
         </div>
+        </div>
       </section>
 
       {/* Vendor Banner Ads */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex justify-between items-center mb-6">
-          <h2>Iklan dari Vendor Partner</h2>
+      <section className="w-full">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex justify-center items-center mb-6">
+          <h2 className="text-mainColor text-xl font-dancingScript font-bold">Iklan dari Vendor Partner</h2>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="overflow-hidden border-mainColorLite hover:shadow-xl transition-shadow">
@@ -454,6 +477,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
             </CardContent>
           </Card>
         </div>
+        </div>
       </section>
 
       {/* Recommended Venues */}
@@ -463,7 +487,7 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
             <h2 className="mb-2">Rekomendasi Venue Terdekat</h2>
             <p className="text-gray-600">Venue terpopuler di area Anda</p>
           </div>
-          <Button variant="outline" className="border-mainColor text-mainColor hover:bg-mainColorLite/30">
+          <Button className="bg-ruangTemuBold text-white rounded-full hover:bg-ruangTemu hover:text-mainColor">
             Lihat Semua
           </Button>
         </div>
@@ -507,10 +531,9 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
       </section>
 
       {/* Testimonials Carousel */}
-      <section className="bg-gradient-to-r from-mainColorLite/30 to-[#FFE4E9]/30 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center mb-12">Apa Kata Mereka?</h2>
-          <div className="relative">
+      {/* <section className="bg-ruangTemuLight py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8"> */}
+          {/* <div className="relative">
             <Card className="border-mainColorLite shadow-xl">
               <CardContent className="p-8">
                 <div className="flex flex-col md:flex-row gap-6 items-center">
@@ -553,9 +576,10 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
                 <ChevronRight className="w-5 h-5" />
               </Button>
             </div>
-          </div>
-        </div>
-      </section>
+          </div> */}
+          <TestimonialSection />
+        {/* </div>
+      </section> */}
       
       {/* Login Modal */}
       {showLoginModal && <LoginModal onClose={() => setShowLoginModal(false)} />}
