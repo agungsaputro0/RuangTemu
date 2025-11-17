@@ -103,8 +103,17 @@ export function BudgetEstimator() {
   const estimate = calculateEstimate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="relative min-h-screen z-0 overflow-visible">
+      <div
+        aria-hidden
+        className="absolute top-16 left-0 w-full h-[40dvh] md:h-[35dvh] bg-[url('/assets/img/blob.png')] 
+             bg-no-repeat  
+             bg-[length:360%] 
+             md:bg-[length:200%]
+             bg-center
+             z-0"
+      />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mt-16"></div>
         <div className="text-center mb-12">
@@ -112,10 +121,10 @@ export function BudgetEstimator() {
             <Calculator className="w-4 h-4 text-[#D4AF37]" />
             <span className="text-sm text-gray-700">Hitung Budget Acara Anda</span>
           </div>
-          <h1 className="mb-3 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
+          <h1 className="mb-3 text-2xl font-bold bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-white font-dancingScript">
             Budget Estimator
           </h1>
-          <p className="text-gray-600 max-w-2xl mx-auto">
+          <p className="text-white max-w-2xl mx-auto">
             Dapatkan estimasi biaya yang akurat untuk lamaran atau pernikahan Anda, plus rekomendasi venue sesuai budget
           </p>
         </div>

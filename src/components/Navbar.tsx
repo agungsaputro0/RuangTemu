@@ -47,7 +47,7 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
   
   return (
     <>
-      <nav className={`sticky top-0 z-50 py-1 backdrop-blur-md transition-colors duration-700 ease-in-out ${ isScroll ? "bg-ruangTemu" : "bg-transparent" }`}>
+      <nav className={`sticky top-0 z-50 py-1 backdrop-blur-md transition-colors duration-700 ease-in-out ${ isScroll ? "bg-ruangTemu" : "bg-ruangTemu" }`}>
         <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className={`flex ${isMobile ? "justify-center" : "justify-between"} items-center h-16`}>
             {/* === LOGO (KIRI) === */}

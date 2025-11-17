@@ -1,4 +1,4 @@
-import { Search, MapPin, DollarSign, Users, Star, Sparkles, SlidersHorizontal, Heart, Eye, Calendar } from 'lucide-react';
+import { Search, MapPin, DollarSign, Users, Star, Sparkles, SlidersHorizontal, Heart, Eye, Calendar, Calculator, Sparkle } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent } from './ui/card';
@@ -537,7 +537,12 @@ export function EksplorVenue({ onVenueClick }: EksplorVenueProps) {
       {/* Ganti bg-mainColor sementara dengan bg-blue-500 untuk test; kembalikan ke bg-mainColor setelah terlihat */}
       <div
         aria-hidden
-        className="absolute top-16 left-0 w-full h-[32vh] md:h-[28vh] bg-ruangTemuBold z-0"
+        className="absolute top-16 left-0 w-full h-[40dvh] md:h-[35dvh] bg-[url('/assets/img/blob.png')] 
+             bg-no-repeat  
+             bg-[length:360%] 
+             md:bg-[length:200%]
+             bg-center
+             z-0"
       />
 
       {/* CONTENT wrapper — harus berada di atas background (z-10) */}
@@ -545,7 +550,13 @@ export function EksplorVenue({ onVenueClick }: EksplorVenueProps) {
         
         {/* Header */}
         <div className="mt-16"></div>
-        <div className="mb-8">
+         <div className="text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#F4E4C1] to-[#FFE4E9] rounded-full mb-4">
+            <Sparkle className="w-4 h-4 text-[#D4AF37]" />
+            <span className="text-sm text-gray-700">Temukan Venue Impianmu</span>
+          </div>
+        </div>
+        <div className={`mb-8 ${isMobile ? "text-center" : "text-center"}`}>
           <h1 className="mb-2 text-3xl font-dancingScript font-bold text-white">Eksplor Venue</h1>
           <p className="text-white">Temukan venue impian dengan filter dan AI Matchmaker</p>
         </div>
@@ -554,70 +565,70 @@ export function EksplorVenue({ onVenueClick }: EksplorVenueProps) {
         <div className="flex flex-col gap-4 mb-8 bg-ruangTemu p-10 rounded-xl">
           {/* ROW 1: Location, Date, Guest */}
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-  {/* LOCATION */}
-  <div className="w-full">
-    <LocationInputDropdown
-      location={location}
-      setLocation={setLocation}
-    />
-  </div>
+            {/* LOCATION */}
+            <div className="w-full">
+              <LocationInputDropdown
+                location={location}
+                setLocation={setLocation}
+              />
+            </div>
 
-  {/* DATE */}
-  <div className="w-full flex items-center bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
-    <div className="flex items-center gap-2 w-full overflow-hidden">
-      <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
+            {/* DATE */}
+            <div className="w-full flex items-center bg-gray-50 px-4 py-2  h-[3.5rem] rounded-lg border border-gray-200">
+              <div className="flex items-center gap-2 w-full overflow-hidden">
+                <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
 
-      {!isRange && (
-        <DatePicker
-          format="DD-MM-YYYY"
-          value={date}
-          onChange={(d) => setDate(d)}
-          placeholder="Tanggal"
-          className="w-full border-none bg-transparent h-full text-sm"
-          popupClassName="scale-95 origin-top"
-        />
-      )}
+                {!isRange && (
+                  <DatePicker
+                    format="DD-MM-YYYY"
+                    value={date}
+                    onChange={(d) => setDate(d)}
+                    placeholder="Tanggal"
+                    className="w-full border-none bg-transparent h-full text-sm"
+                    popupClassName="scale-95 origin-top"
+                  />
+                )}
 
-      {isRange && (
-        <DatePicker.RangePicker
-          format="DD-MM-YYYY"
-          value={range}
-          onChange={(val) => setRange(val)}
-          placeholder={["Mulai", "Selesai"]}
-          className="w-full border-none bg-transparent h-full text-sm"
-          popupClassName="scale-95 origin-top"
-        />
-      )}
-    </div>
+                {isRange && (
+                  <DatePicker.RangePicker
+                    format="DD-MM-YYYY"
+                    value={range}
+                    onChange={(val) => setRange(val)}
+                    placeholder={["Mulai", "Selesai"]}
+                    className="w-full border-none bg-transparent h-full text-sm"
+                    popupClassName="scale-95 origin-top"
+                  />
+                )}
+              </div>
 
-    {/* Toggle Range */}
-    <div
-      onClick={() => setIsRange(!isRange)}
-      className={`ml-3 w-12 h-5 rounded-full p-1 flex items-center cursor-pointer transition-all ${
-        isRange ? "bg-mainColor" : "bg-gray-200"
-      }`}
-    >
-      <div
-        className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
-          isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"
-        }`}
-      />
-    </div>
-  </div>
+              {/* Toggle Range */}
+              <div
+                onClick={() => setIsRange(!isRange)}
+                className={`ml-3 w-12 h-5 rounded-full p-1 flex items-center cursor-pointer transition-all ${
+                  isRange ? "bg-mainColor" : "bg-gray-200"
+                }`}
+              >
+                <div
+                  className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
+                    isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"
+                  }`}
+                />
+              </div>
+            </div>
 
-  {/* GUEST */}
-  <div className="w-full flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
-    <Users className="w-5 h-5 text-mainColor" />
-    <AntdInput
-      placeholder="Jumlah Tamu"
-      type="number"
-      min={1}
-      value={guest ?? ""}
-      onChange={(e) => setGuest(Number(e.target.value))}
-      className="border-none bg-transparent p-0 text-sm focus:ring-0 w-full"
-    />
-  </div>
-</div>
+            {/* GUEST */}
+            <div className="w-full flex items-center gap-2 bg-gray-50 px-4 h-[3.5rem] py-2 rounded-lg border border-gray-200">
+              <Users className="w-5 h-5 text-mainColor" />
+              <AntdInput
+                placeholder="Jumlah Tamu"
+                type="number"
+                min={1}
+                value={guest ?? ""}
+                onChange={(e) => setGuest(Number(e.target.value))}
+                className="border-none bg-transparent p-0 text-sm focus:ring-0 w-full"
+              />
+            </div>
+          </div>
 
 
           {/* ROW 2: Filter + AI Matchmaker */}
