@@ -4,15 +4,12 @@ const Logo: React.FC = () => {
   return (
     <div style={{ display: 'flex', alignItems: 'center' }}>
       <img
-        src="/assets/img/logo-fix.png" 
+        src="/assets/img/logo-long.png" 
         alt="Logo Ruang Temu"
-        width={60}
+        width={240}
         height={60}
-        className="ml-1"
+        className="ml-1 mb-2"
       />
-      <div>
-        <h3><b><span className="text-mainColor font-dancingScript text-4xl">Ruang Temu</span></b></h3>
-      </div>
     </div>
   );
 };

@@ -135,8 +135,6 @@ export function Beranda({ onVenueClick, onNavigate }: BerandaProps) {
     onNavigate?.(`/eksplor?data=${encoded}`);
   };
 
-  
-
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
       

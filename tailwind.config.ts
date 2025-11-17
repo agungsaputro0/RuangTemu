@@ -74,6 +74,8 @@ const config: Config = {
         ruangTemuBrown: "linear-gradient(120deg, rgba(91,68,53,0.7), rgba(216,196,177,0.6), rgba(244,233,221,0.5))",
         ruangTemuAmbient: "linear-gradient(to top, #c3d4ef, #ffd4b8, transparent)",
         ruangTemuBold: "linear-gradient(135deg, #0457beff, #f89861ff)",
+        ruangTemuPremier: "linear-gradient(135deg, #0457beff,  #a8b1fcff)",
+        ruangTemuSecond: "linear-gradient(135deg, #f97529ff,  #f89861ff)",
         ruangTemuLight: "linear-gradient(to right, #a8b1fcff, #ffd4b8)",
         gradientJourney: "linear-gradient(to bottom, #F8E5E5, #F5C2C7)",
         gradientJourneyInNumber:

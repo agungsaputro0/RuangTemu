@@ -147,7 +147,7 @@ return (
                       <Button
                         message=""
                         onClick={handleOpenCurtain}
-                        variant="min-h-10 min-w-[200px] bg-mainColor hover:bg-mainColorHover text-white px-6 rounded-full font-poppins"
+                        variant="min-h-10 min-w-[200px] bg-ruangTemuBold font-dancingScript hover:bg-mainColorHover text-white px-6 rounded-full font-poppins"
                       >
                         Mulai Sekarang
                       </Button>
