@@ -553,59 +553,72 @@ export function EksplorVenue({ onVenueClick }: EksplorVenueProps) {
         {/* Search & AI Matchmaker */}
         <div className="flex flex-col gap-4 mb-8 bg-ruangTemu p-10 rounded-xl">
           {/* ROW 1: Location, Date, Guest */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {/* LOCATION */}
-            <LocationInputDropdown
-              location={location}
-              setLocation={setLocation}
-            />
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+  {/* LOCATION */}
+  <div className="w-full">
+    <LocationInputDropdown
+      location={location}
+      setLocation={setLocation}
+    />
+  </div>
 
-            {/* DATE */}
-            <div className="grid grid-cols-[1fr_auto] items-center bg-gray-50 px-4 rounded-lg border border-gray-200">
-              <div className="flex items-center gap-2 w-full overflow-hidden">
-                <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
-                {!isRange && (
-                  <DatePicker
-                    format="DD-MM-YYYY"
-                    value={date}
-                    onChange={(d) => setDate(d)}
-                    placeholder="Tanggal"
-                    className="w-full border-0 bg-transparent h-full text-sm"
-                    popupClassName="scale-95 origin-top"
-                  />
-                )}
-                {isRange && (
-                  <DatePicker.RangePicker
-                    format="DD-MM-YYYY"
-                    value={range}
-                    onChange={(val) => setRange(val)}
-                    placeholder={["Mulai", "Selesai"]}
-                    className="w-full border-0 bg-transparent h-full text-sm"
-                    popupClassName="scale-95 origin-top"
-                  />
-                )}
-              </div>
-              <div
-                onClick={() => setIsRange(!isRange)}
-                className={`w-12 h-5 rounded-full p-1 flex items-center cursor-pointer transition-all ${isRange ? "bg-mainColor" : "bg-gray-200"}`}
-              >
-                <div className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"}`} />
-              </div>
-            </div>
+  {/* DATE */}
+  <div className="w-full flex items-center bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+    <div className="flex items-center gap-2 w-full overflow-hidden">
+      <Calendar className="w-5 h-5 text-mainColor flex-shrink-0" />
 
-            {/* GUEST */}
-            <div className="flex items-center gap-2 bg-gray-50 px-4 rounded-lg border border-gray-200">
-              <Users className="w-5 h-5 text-mainColor" />
-              <AntdInput
-                placeholder="Jumlah Tamu"
-                type="number"
-                min={1}
-                value={guest ?? ""}
-                onChange={(e) => setGuest(Number(e.target.value))}
-                className="border-0 bg-transparent p-0 text-sm focus:ring-0 w-full"
-              />
-            </div>
-          </div>
+      {!isRange && (
+        <DatePicker
+          format="DD-MM-YYYY"
+          value={date}
+          onChange={(d) => setDate(d)}
+          placeholder="Tanggal"
+          className="w-full border-none bg-transparent h-full text-sm"
+          popupClassName="scale-95 origin-top"
+        />
+      )}
+
+      {isRange && (
+        <DatePicker.RangePicker
+          format="DD-MM-YYYY"
+          value={range}
+          onChange={(val) => setRange(val)}
+          placeholder={["Mulai", "Selesai"]}
+          className="w-full border-none bg-transparent h-full text-sm"
+          popupClassName="scale-95 origin-top"
+        />
+      )}
+    </div>
+
+    {/* Toggle Range */}
+    <div
+      onClick={() => setIsRange(!isRange)}
+      className={`ml-3 w-12 h-5 rounded-full p-1 flex items-center cursor-pointer transition-all ${
+        isRange ? "bg-mainColor" : "bg-gray-200"
+      }`}
+    >
+      <div
+        className={`w-3.5 h-3.5 rounded-full transition-all duration-300 ${
+          isRange ? "translate-x-6 bg-white" : "translate-x-0 bg-mainColor"
+        }`}
+      />
+    </div>
+  </div>
+
+  {/* GUEST */}
+  <div className="w-full flex items-center gap-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
+    <Users className="w-5 h-5 text-mainColor" />
+    <AntdInput
+      placeholder="Jumlah Tamu"
+      type="number"
+      min={1}
+      value={guest ?? ""}
+      onChange={(e) => setGuest(Number(e.target.value))}
+      className="border-none bg-transparent p-0 text-sm focus:ring-0 w-full"
+    />
+  </div>
+</div>
+
 
           {/* ROW 2: Filter + AI Matchmaker */}
           <div className="flex flex-col md:flex-row gap-3 mt-2">
