@@ -648,10 +648,10 @@ export function AIMatchmaker({ onClose, onRecommendations }: AIMatchmakerProps) 
           step={10}
         >
           <SliderPrimitive.Track className="bg-gray-300 relative flex-1 h-1 rounded-full">
-            <SliderPrimitive.Range className="absolute bg-[#D4AF37] rounded-full h-full" />
+            <SliderPrimitive.Range className="absolute bg-secondColor rounded-full h-full" />
           </SliderPrimitive.Track>
-          <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md" />
-          <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md" />
+          <SliderPrimitive.Thumb className="block w-5 h-5 bg-secondColor rounded-full shadow-md" />
+          <SliderPrimitive.Thumb className="block w-5 h-5 bg-secondColor rounded-full shadow-md" />
         </SliderPrimitive.Root>
 
         <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -679,10 +679,10 @@ export function AIMatchmaker({ onClose, onRecommendations }: AIMatchmakerProps) 
           step={5000000}
         >
           <SliderPrimitive.Track className="bg-gray-300 relative flex-1 h-1 rounded-full">
-            <SliderPrimitive.Range className="absolute bg-[#D4AF37] rounded-full h-full" />
+            <SliderPrimitive.Range className="absolute bg-secondColor rounded-full h-full" />
           </SliderPrimitive.Track>
-          <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md" />
-          <SliderPrimitive.Thumb className="block w-5 h-5 bg-[#D4AF37] rounded-full shadow-md" />
+          <SliderPrimitive.Thumb className="block w-5 h-5 bg-secondColor rounded-full shadow-md" />
+          <SliderPrimitive.Thumb className="block w-5 h-5 bg-secondColor rounded-full shadow-md" />
         </SliderPrimitive.Root>
 
         <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -705,11 +705,11 @@ export function AIMatchmaker({ onClose, onRecommendations }: AIMatchmakerProps) 
                     onClick={() => setPreferences({ ...preferences, theme })}
                     className={`p-2 rounded-xl border-2 transition-all ${
                       preferences.theme === theme
-                        ? 'border-[#D4AF37] bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
+                        ? 'border-secondColor bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
                         : 'border-gray-200 hover:border-[#FFB6C1]'
                     }`}
                   >
-                    <p className={`text-sm ${preferences.theme === theme ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
+                    <p className={`text-sm ${preferences.theme === theme ? 'text-secondColor' : 'text-gray-600'}`}>
                       {theme}
                     </p>
                   </button>
@@ -726,11 +726,11 @@ export function AIMatchmaker({ onClose, onRecommendations }: AIMatchmakerProps) 
                     onClick={() => setPreferences({ ...preferences, style })}
                     className={`p-2 rounded-xl border-2 transition-all ${
                       preferences.style === style
-                        ? 'border-[#D4AF37] bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
+                        ? 'border-secondColor bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30'
                         : 'border-gray-200 hover:border-[#FFB6C1]'
                     }`}
                   >
-                    <p className={`text-sm ${preferences.style === style ? 'text-[#D4AF37]' : 'text-gray-600'}`}>
+                    <p className={`text-sm ${preferences.style === style ? 'text-secondColor' : 'text-gray-600'}`}>
                       {style}
                     </p>
                   </button>
@@ -762,7 +762,7 @@ export function AIMatchmaker({ onClose, onRecommendations }: AIMatchmakerProps) 
                     onClick={() => toggleAmenity(amenity)}
                     className={`p-3 rounded-lg border-2 transition-all text-sm ${
                       preferences.amenities.includes(amenity)
-                        ? 'border-[#D4AF37] bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30 text-[#D4AF37]'
+                        ? 'border-secondColor bg-gradient-to-br from-[#F4E4C1]/30 to-[#FFE4E9]/30 text-secondColor'
                         : 'border-gray-200 hover:border-[#FFB6C1] text-gray-600'
                     }`}
                   >

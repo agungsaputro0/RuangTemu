@@ -176,7 +176,7 @@ export function ReviewKomunitas() {
   
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
+    <div className="min-h-screen bg-gradient-to-b from-white to-ruangTemuPremier/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -184,17 +184,29 @@ export function ReviewKomunitas() {
           <p className="text-gray-600">Baca pengalaman pengguna lain dan bergabung dalam diskusi</p>
         </div>
 
-        <Tabs defaultValue="reviews" className="space-y-6">
-          <TabsList className="bg-[#FFE4E9]/30 p-1">
-            <TabsTrigger value="reviews" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#D4AF37] data-[state=active]:to-[#FFB6C1] data-[state=active]:text-white">
-              <Star className="w-4 h-4 mr-2" />
+        <Tabs defaultValue="reviews" className="space-y-6 p-4">
+          <TabsList className="bg-ruangTemuPremier/20 p-1 rounded-xl flex gap-1 shadow-sm">
+            <TabsTrigger
+              value="reviews"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                        data-[state=active]:bg-ruangTemuPremier text-white
+                        hover:bg-ruangTemuPremier/50 hover:text-mainColor"
+            >
+              <Star className="w-4 h-4" />
               Review Terverifikasi
             </TabsTrigger>
-            <TabsTrigger value="forum" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-[#D4AF37] data-[state=active]:to-[#FFB6C1] data-[state=active]:text-white">
-              <MessageSquare className="w-4 h-4 mr-2" />
+
+            <TabsTrigger
+              value="forum"
+              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                        data-[state=active]:bg-ruangTemuPremier text-white
+                        hover:bg-ruangTemuPremier/50 hover:text-mainColor"
+            >
+              <MessageSquare className="w-4 h-4" />
               Forum Diskusi
             </TabsTrigger>
           </TabsList>
+
 
           {/* Reviews Tab */}
           <TabsContent value="reviews" className="space-y-6">
@@ -215,7 +227,7 @@ export function ReviewKomunitas() {
             <div className="grid md:grid-cols-3 gap-4">
               <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#D4AF37] to-[#FFB6C1] rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-ruangTemuSecond rounded-full flex items-center justify-center mx-auto mb-3">
                     <Star className="w-6 h-6 text-white" />
                   </div>
                   <p className="text-3xl mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
@@ -224,9 +236,9 @@ export function ReviewKomunitas() {
                   <p className="text-sm text-gray-600">Rating Rata-rata</p>
                 </CardContent>
               </Card>
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#FFE4E9]/20">
+              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-ruangTemuPremier/20">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#D4AF37] to-[#FFB6C1] rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-ruangTemuSecond rounded-full flex items-center justify-center mx-auto mb-3">
                     <CheckCircle className="w-6 h-6 text-white" />
                   </div>
                   <p className="text-3xl mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
@@ -237,7 +249,7 @@ export function ReviewKomunitas() {
               </Card>
               <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20">
                 <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#D4AF37] to-[#FFB6C1] rounded-full flex items-center justify-center mx-auto mb-3">
+                  <div className="w-12 h-12 bg-ruangTemuSecond rounded-full flex items-center justify-center mx-auto mb-3">
                     <ThumbsUp className="w-6 h-6 text-white" />
                   </div>
                   <p className="text-3xl mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
@@ -356,7 +368,7 @@ export function ReviewKomunitas() {
                   <p className="text-sm text-gray-600">Total Topik</p>
                 </CardContent>
               </Card>
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#FFE4E9]/20">
+              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-ruangTemuPremier/20">
                 <CardContent className="p-4 text-center">
                   <User className="w-8 h-8 mx-auto mb-2 text-[#FFB6C1]" />
                   <p className="text-2xl mb-1 text-[#FFB6C1]">1,234</p>
@@ -606,7 +618,7 @@ export function ReviewKomunitas() {
           
           <div className="space-y-4 py-4">
       
-            <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-[#FFE4E9]/10">
+            <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-ruangTemuPremier/10">
               <CardContent className="p-4">
                 <p className="text-gray-700 mb-4">
                   Halo semuanya! Saya sedang mencari venue untuk pernikahan dengan budget yang terbatas. 
@@ -634,7 +646,7 @@ export function ReviewKomunitas() {
                 <CardContent className="p-4">
                   <div className="flex gap-3 mb-3">
                     <Avatar className="w-8 h-8">
-                      <AvatarFallback className="bg-[#FFE4E9] text-[#FFB6C1]">
+                      <AvatarFallback className="bg-ruangTemuPremier text-[#FFB6C1]">
                         R
                       </AvatarFallback>
                     </Avatar>
@@ -740,7 +752,7 @@ export function ReviewKomunitas() {
     {/* konten + komentar scrollable */}
     <div className="flex-1 flex flex-col overflow-hidden space-y-4 p-4">
       {/* post utama */}
-      <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-[#FFE4E9]/10">
+      <Card className="border-[#F4E4C1] bg-gradient-to-br from-[#F4E4C1]/10 to-ruangTemuPremier/10">
         <CardContent className="p-4">
           <p className="text-gray-700 mb-4">
             Halo semuanya! Saya sedang mencari venue untuk pernikahan dengan budget
@@ -772,7 +784,7 @@ export function ReviewKomunitas() {
           <CardContent className="p-4">
             <div className="flex gap-3 mb-3">
               <Avatar className="w-8 h-8">
-                <AvatarFallback className="bg-[#FFE4E9] text-[#FFB6C1]">
+                <AvatarFallback className="bg-ruangTemuPremier text-[#FFB6C1]">
                   R
                 </AvatarFallback>
               </Avatar>

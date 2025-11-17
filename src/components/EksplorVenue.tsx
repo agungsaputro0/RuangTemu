@@ -23,7 +23,7 @@ import { useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { decryptData } from '../hooks/UseEncryptor';
 
-const allVenues = [
+export const allVenues = [
   {
     id: 1,
     name: "Grand Ballroom Elegance",

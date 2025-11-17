@@ -1,4 +1,4 @@
-import { Calculator, Users, MapPin, Sparkles, TrendingUp, Check } from 'lucide-react';
+import { Calculator, Users, MapPin, Sparkles, TrendingUp, Check, Badge } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -6,9 +6,39 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Checkbox } from './ui/checkbox';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { useState } from 'react';
+import { allVenues } from './EksplorVenue';
+import { GiTheater } from 'react-icons/gi';
+import { useNavigate } from 'react-router-dom';
+
+ export const SERVICE_DEFINITIONS = [
+    { key: "venue", label: "Venue", desc: "Sewa tempat acara" },
+    { key: "catering", label: "Catering", desc: "Makanan & minuman" },
+    { key: "decoration", label: "Dekorasi", desc: "Dekorasi ruangan & tema" },
+    { key: "photography", label: "Foto", desc: "Dokumentasi profesional" },
+    { key: "videography", label: "Video", desc: "Perekaman video acara" },
+    { key: "entertainment", label: "Hiburan", desc: "Musik, DJ, MC" },
+    { key: "mc", label: "MC", desc: "Master of Ceremony" },
+    { key: "sound", label: "Sound System", desc: "Audio & peralatan mic" },
+    { key: "lighting", label: "Lighting", desc: "Tata cahaya profesional" },
+    { key: "stage", label: "Stage", desc: "Panggung & rigging" },
+    { key: "booth", label: "Booth", desc: "Stan bazaar / tenant" },
+    { key: "equipment", label: "Peralatan", desc: "Peralatan acara & teknis" },
+    { key: "crew", label: "Crew", desc: "Tim teknis & operasional" },
+    { key: "security", label: "Keamanan", desc: "Petugas keamanan acara" },
+    { key: "cleaning", label: "Cleaning", desc: "Kebersihan lokasi acara" },
+    { key: "parking", label: "Parkir", desc: "Manajemen parkir" },
+    { key: "registrationDesk", label: "Registrasi", desc: "Meja registrasi tamu" },
+    { key: "ambulance", label: "Ambulans", desc: "Tim medis & ambulans" },
+    { key: "livestream", label: "Live Streaming", desc: "Siaran langsung acara" },
+    { key: "generator", label: "Genset", desc: "Backup daya listrik" },
+    { key: "wifi", label: "WiFi", desc: "Internet untuk acara" },
+    { key: "makeup", label: "Make Up Artist", desc: "Make up profesional" },
+  ];
+
 
 export function BudgetEstimator() {
   const [guests, setGuests] = useState('');
+  const navigate = useNavigate();
   const [eventType, setEventType] = useState('');
   const [location, setLocation] = useState('');
   const [services, setServices] = useState({
@@ -21,19 +51,198 @@ export function BudgetEstimator() {
   });
   const [showEstimate, setShowEstimate] = useState(false);
 
-  const calculateEstimate = () => {
-    const guestCount = parseInt(guests) || 0;
-    let total = 0;
+  type ServiceRangeFn = (guest: number) => { min: number; max: number };
 
-    if (services.venue) total += guestCount * 50000; // Base venue cost
-    if (services.catering) total += guestCount * 150000;
-    if (services.decoration) total += 15000000;
-    if (services.photography) total += 10000000;
-    if (services.entertainment) total += 8000000;
-    if (services.makeup) total += 5000000;
-
-    return total;
+  const SERVICE_COST_RANGE: Record<string, ServiceRangeFn> = {
+    venue: (g = 1, type?: string) => {
+      switch (type) {
+        case "Olahraga":
+          return { min: 3_000_000, max: 15_000_000 };
+        case "Meeting":
+          return { min: 5_000_000, max: 30_000_000 };
+        case "Bazaar":
+          return { min: 15_000_000, max: 150_000_000 };
+        case "Seremonial":
+          return { min: 25_000_000, max: 150_000_000 };
+        case "Pesta":
+          return { min: 25_000_000, max: 150_000_000 };
+        default:
+          return { min: 5_000_000, max: 40_000_000 }; 
+      }
+    },
+    catering: (g = 1) => ({ min: 60000 * g, max: 250000 * g }),    // menu standar Jakarta
+    decoration: () => ({ min: 3000000, max: 12000000 }),           // dekorasi standar Jakarta
+    photography: () => ({ min: 4000000, max: 10000000 }),          // dokumentasi standar Jakarta
+    videography: () => ({ min: 4000000, max: 10000000 }),
+    entertainment: () => ({ min: 1500000, max: 6000000 }),         // hiburan Jakarta
+    mc: () => ({ min: 1000000, max: 4000000 }),                    // MC skala Jakarta
+    sound: () => ({ min: 750000, max: 5000000 }),                  // sound system besar
+    lighting: () => ({ min: 750000, max: 5000000 }),
+    stage: () => ({ min: 1500000, max: 5000000 }),
+    booth: () => ({ min: 750000, max: 3000000 }),
+    equipment: () => ({ min: 750000, max: 3000000 }),
+    crew: () => ({ min: 0, max: 3000000 }),
+    security: () => ({ min: 0, max: 2500000 }),
+    cleaning: () => ({ min: 750000, max: 2500000 }),
+    parking: () => ({ min: 0, max: 0 }),                           // diasumsikan gratis
+    registrationDesk: () => ({ min: 750000, max: 2500000 }),
+    ambulance: () => ({ min: 0, max: 0 }),
+    livestream: () => ({ min: 1500000, max: 5000000 }),
+    generator: () => ({ min: 750000, max: 2500000 }),
+    wifi: () => ({ min: 0, max: 1500000 }),
+    makeup: () => ({ min: 1000000, max: 7000000 }),
   };
+
+
+  const getDefaultServices = (type: string) => {
+    const base = {
+      venue: false,
+      catering: false,
+      sound: false,
+      lighting: false,
+      decoration: false,
+      stage: false,
+      booth: false,
+      equipment: false,
+      crew: false,
+      security: false,
+      cleaning: false,
+      photography: false,
+      videography: false,
+      mc: false,
+      entertainment: false,
+      parking: false,
+      registrationDesk: false,
+      ambulance: false,
+      livestream: false,
+      generator: false,
+      wifi: false,
+      makeup: false,
+    };
+
+    switch (type) {
+      case "Meeting":
+        return {
+          ...base,
+          venue: true,
+          catering: true,
+          sound: true,
+          lighting: false,
+          decoration: false,
+          wifi: true,
+          equipment: true,
+          crew: true,
+          registrationDesk: true,
+        };
+
+      case "Olahraga":
+        return {
+          ...base,
+          venue: true,
+          equipment: true,
+          crew: true,
+          sound: false,
+          decoration: false,
+          security: true,
+          cleaning: true,
+          ambulance: true,
+        };
+
+      case "Bazaar":
+        return {
+          ...base,
+          venue: true,
+          booth: true,
+          lighting: true,
+          security: true,
+          cleaning: true,
+          sound: false,
+          decoration: false,
+          generator: true,
+        };
+
+      case "Pesta":
+        return {
+          ...base,
+          venue: true,
+          catering: true,
+          sound: true,
+          lighting: true,
+          decoration: true,
+          entertainment: true,
+          mc: true,
+          photography: true,
+          videography: true,
+          generator: true,
+          parking: true,
+        };
+
+      case "Seremonial":
+        return {
+          ...base,
+          venue: true,
+          stage: true,
+          sound: true,
+          lighting: true,
+          decoration: true,
+          catering: true,
+          photography: true,
+          videography: true,
+          mc: true,
+          livestream: true,
+          security: true,
+          parking: true,
+        };
+
+      default:
+        return base;
+    }
+  };
+
+  const getVenueRange = (location: string, eventType: string) => {
+    const venues = allVenues.filter((v) =>
+      v.location.includes(location) &&
+      v.purposes.some((p) =>
+        p.toLowerCase().includes(eventType.toLowerCase())
+      )
+    );
+
+    if (venues.length === 0) {
+      return { min: 0, max: 0 };
+    }
+
+    const prices = venues.map((v) => v.price);
+    return {
+      min: Math.min(...prices),
+      max: Math.max(...prices),
+    };
+  };
+
+
+  const calculateEstimate = () => {
+    const g = parseInt(guests) || 0;
+    let min = 0;
+    let max = 0;
+
+    for (const key of Object.keys(services)) {
+      if (services[key as keyof typeof services]) {
+        const fn = SERVICE_COST_RANGE[key];
+        if (fn) {
+          const { min: svcMin, max: svcMax } = fn(g);
+          min += svcMin;
+          max += svcMax;
+        }
+      }
+    }
+
+    // Venue sekarang bisa digabung dengan data real dari allVenues
+    const venueRange = getVenueRange(location, eventType); // dari function sebelumnya
+    min += venueRange.min;
+    max += venueRange.max;
+
+    return { min, max };
+  };
+
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('id-ID', {
@@ -49,58 +258,110 @@ export function BudgetEstimator() {
     }
   };
 
-  const allVenues = [
-    {
-      id: 1,
-      name: 'Romantic Restaurant Hall',
-      price: 12000000,
-      image: 'https://images.unsplash.com/photo-1680079033123-e5b22be5c523?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMHJlc3RhdXJhbnQlMjBpbnRlcmlvcnxlbnwxfHx8fDE3NTk5NzU4OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 2,
-      name: 'Modern Reception Hall',
-      price: 20000000,
-      image: 'https://images.unsplash.com/photo-1759477274116-e3cb02d2b9d8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwcmVjZXB0aW9uJTIwaGFsbHxlbnwxfHx8fDE3NTk5NzU4OTZ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 3,
-      name: 'Royal Garden Venue',
-      price: 18000000,
-      image: 'https://images.unsplash.com/photo-1759490821541-f78bb13a752d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvdXRkb29yJTIwZ2FyZGVuJTIwd2VkZGluZ3xlbnwxfHx8fDE3NTk5MzYyOTF8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 4,
-      name: 'Grand Ballroom Elegance',
-      price: 25000000,
-      image: 'https://images.unsplash.com/photo-1674924258890-f4a5d99bb28c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlbGVnYW50JTIwd2VkZGluZyUyMHZlbnVlfGVufDF8fHx8MTc1OTk3MzM1M3ww&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
-      id: 5,
-      name: 'Luxury Hotel Ballroom',
-      price: 35000000,
-      image: 'https://images.unsplash.com/photo-1519167758481-83f29da8c2b6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxiYWxscm9vbSUyMHdlZGRpbmd8ZW58MXx8fHwxNzU5OTc1ODk2fDA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-  ];
-
+  
   // Filter venues based on budget (within 20% of venue cost)
-  const getRecommendedVenues = () => {
-    const venueBudget = services.venue ? parseInt(guests) * 50000 : estimate * 0.4; // Assume 40% of total budget for venue
-    return allVenues
-      .filter((venue) => {
-        const diff = Math.abs(venue.price - venueBudget) / venueBudget;
-        return diff <= 0.5; // Within 50% range
-      })
-      .map((venue) => {
-        const match = Math.max(50, Math.min(100, 100 - (Math.abs(venue.price - venueBudget) / venueBudget) * 100));
-        return { ...venue, match: Math.round(match) };
-      })
-      .sort((a, b) => b.match - a.match)
-      .slice(0, 3);
+ interface GetRecommendedOptions {
+  guests: number;
+  estimateMAX: number;
+  purpose: string;  // ini dari eventType
+  location: string;
+  services: { venue?: boolean };
+}
+
+const parseCapacity = (capacity: string) => {
+  const [minStr, maxStr] = capacity.replace(/\D/g, " ").trim().split(/\s+/);
+  return { min: parseInt(minStr), max: parseInt(maxStr) };
+};
+
+  const getRecommendedVenues = ({ guests, estimateMAX, purpose, location, services }: GetRecommendedOptions) => {
+  const venueBudget = services.venue ? guests * 50000 : estimateMAX * 0.4;
+
+  const scoreVenue = (venue: typeof allVenues[number]) => {
+    const { min, max } = parseCapacity(venue.capacity);
+
+    // Budget score
+    const budgetDiff = Math.abs(venue.price - venueBudget) / venueBudget;
+    const budgetScore = Math.max(0, 100 - budgetDiff * 100);
+
+    // Capacity score
+    let capacityScore = 100;
+    if (guests > max) capacityScore = Math.max(50, 100 - ((guests - max) / max) * 100);
+    if (guests < min) capacityScore = Math.max(50, 100 - ((min - guests) / min) * 100);
+
+    // Purpose score
+    const purposeScore = purpose
+      ? venue.purposes.some(p => p.toLowerCase() === purpose.toLowerCase())
+        ? 100
+        : 0
+      : 100;
+
+    // Location score
+    const locationScore = location
+      ? venue.location.toLowerCase().includes(location.toLowerCase())
+        ? 100
+        : 50
+      : 100;
+
+    // Weighted: purpose diutamakan
+    const match = Math.round(
+      budgetScore * 0.3 +
+      capacityScore * 0.2 +
+      purposeScore * 0.4 +
+      locationScore * 0.1
+    );
+
+    return { ...venue, match };
   };
 
-  const recommendedVenues = getRecommendedVenues();
+  // Helper untuk sorting: match desc, kalau sama price asc
+  const sortByMatchAndPrice = (a: typeof allVenues[number] & { match: number }, b: typeof allVenues[number] & { match: number }) => {
+    if (b.match !== a.match) return b.match - a.match;  // match descending
+    return a.price - b.price;                           // price ascending
+  };
+
+  // Level 1: purpose + lokasi
+  let level1 = allVenues.filter(v =>
+    v.purposes.some(p => p.toLowerCase() === purpose.toLowerCase()) &&
+    v.location.toLowerCase().includes(location.toLowerCase())
+  ).map(scoreVenue);
+
+  if (level1.length >= 3) return level1.sort(sortByMatchAndPrice).slice(0, 3);
+
+  // Level 2: purpose sesuai, lokasi fleksibel
+  let level2 = allVenues.filter(v =>
+    v.purposes.some(p => p.toLowerCase() === purpose.toLowerCase()) &&
+    !v.location.toLowerCase().includes(location.toLowerCase())
+  ).map(scoreVenue);
+
+  let combined = [...level1, ...level2];
+  if (combined.length >= 3) return combined.sort(sortByMatchAndPrice).slice(0, 3);
+
+  // Level 3: sisanya
+  let level3 = allVenues
+    .filter(v => !combined.some(c => c.id === v.id))
+    .map(scoreVenue);
+
+  combined = [...combined, ...level3];
+  return combined.sort(sortByMatchAndPrice).slice(0, 3);
+};
+
+
 
   const estimate = calculateEstimate();
+
+  const g = parseInt(guests) || 0;
+  const estimateMAX = calculateEstimate().max;
+
+  const recommendedVenues = getRecommendedVenues({
+    guests: g,
+    estimateMAX,
+    purpose: eventType,  // <-- ini sekarang cocok dengan array purposes
+    location,
+    services: { venue: services.venue },
+  });
+
+  const [showAllServices, setShowAllServices] = useState(false);
+  const activeServices = Object.keys(services).filter(key => services[key as keyof typeof services]);
 
   return (
     <div className="relative min-h-screen z-0 overflow-visible">
@@ -121,7 +382,7 @@ export function BudgetEstimator() {
             <Calculator className="w-4 h-4 text-[#D4AF37]" />
             <span className="text-sm text-gray-700">Hitung Budget Acara Anda</span>
           </div>
-          <h1 className="mb-3 text-2xl font-bold bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-white font-dancingScript">
+          <h1 className="mb-3 text-3xl font-bold bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-white font-dancingScript">
             Budget Estimator
           </h1>
           <p className="text-white max-w-2xl mx-auto">
@@ -133,19 +394,24 @@ export function BudgetEstimator() {
           {/* Input Form */}
           <Card className="border-[#F4E4C1] shadow-lg">
             <CardHeader>
-              <CardTitle>Detail Acara</CardTitle>
+              <CardTitle className="font-dancingScript text-2xl text-center text-mainColor font-bold">Detail Acara</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
                 <label className="block mb-2">Jenis Acara</label>
-                <Select value={eventType} onValueChange={setEventType}>
+                <Select value={eventType} onValueChange={(val) => {
+                    setEventType(val);
+                    setServices(getDefaultServices(val)); 
+                  }}>
                   <SelectTrigger className="border-[#F4E4C1]">
                     <SelectValue placeholder="Pilih jenis acara" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="engagement">Lamaran</SelectItem>
-                    <SelectItem value="wedding">Pernikahan</SelectItem>
-                    <SelectItem value="reception">Resepsi</SelectItem>
+                    <SelectItem value="Seremonial">Seremonial</SelectItem>
+                    <SelectItem value="Meeting">Meeting</SelectItem>
+                    <SelectItem value="Olahraga">Olahraga</SelectItem>
+                    <SelectItem value="Bazaar">Bazaar</SelectItem>
+                    <SelectItem value="Pesta">Pesta</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -157,11 +423,14 @@ export function BudgetEstimator() {
                     <SelectValue placeholder="Pilih lokasi" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="jakarta-pusat">Jakarta Pusat</SelectItem>
-                    <SelectItem value="jakarta-selatan">Jakarta Selatan</SelectItem>
-                    <SelectItem value="jakarta-barat">Jakarta Barat</SelectItem>
-                    <SelectItem value="tangerang">Tangerang</SelectItem>
-                    <SelectItem value="bekasi">Bekasi</SelectItem>
+                    <SelectItem value="Jakarta Pusat">Jakarta Pusat</SelectItem>
+                    <SelectItem value="Jakarta Selatan">Jakarta Selatan</SelectItem>
+                    <SelectItem value="Jakarta Timur">Jakarta Timur</SelectItem>
+                    <SelectItem value="Jakarta Barat">Jakarta Barat</SelectItem>
+                    <SelectItem value="Jakarta Utara">Jakarta Utara</SelectItem>
+                    <SelectItem value="Kota Bekasi">Kota Bekasi</SelectItem>
+                    <SelectItem value="Kota Depok">Kota Depok</SelectItem>
+                    <SelectItem value="Kota Tangerang">Kota Tangerang</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -180,93 +449,46 @@ export function BudgetEstimator() {
                 </div>
               </div>
 
+            
               <div>
-                <label className="block mb-3">Paket Layanan</label>
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors">
-                    <Checkbox
-                      checked={services.venue}
-                      onCheckedChange={(checked) =>
-                        setServices({ ...services, venue: checked as boolean })
-                      }
-                      className="border-[#D4AF37] data-[state=checked]:bg-[#D4AF37]"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Venue</p>
-                      <p className="text-xs text-gray-500">Sewa tempat acara</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors">
-                    <Checkbox
-                      checked={services.catering}
-                      onCheckedChange={(checked) =>
-                        setServices({ ...services, catering: checked as boolean })
-                      }
-                      className="border-[#D4AF37] data-[state=checked]:bg-[#D4AF37]"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Catering</p>
-                      <p className="text-xs text-gray-500">Makanan & minuman</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors">
-                    <Checkbox
-                      checked={services.decoration}
-                      onCheckedChange={(checked) =>
-                        setServices({ ...services, decoration: checked as boolean })
-                      }
-                      className="border-[#D4AF37] data-[state=checked]:bg-[#D4AF37]"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Dekorasi</p>
-                      <p className="text-xs text-gray-500">Dekorasi pelaminan & ruangan</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors">
-                    <Checkbox
-                      checked={services.photography}
-                      onCheckedChange={(checked) =>
-                        setServices({ ...services, photography: checked as boolean })
-                      }
-                      className="border-[#D4AF37] data-[state=checked]:bg-[#D4AF37]"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Foto & Video</p>
-                      <p className="text-xs text-gray-500">Dokumentasi profesional</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors">
-                    <Checkbox
-                      checked={services.entertainment}
-                      onCheckedChange={(checked) =>
-                        setServices({ ...services, entertainment: checked as boolean })
-                      }
-                      className="border-[#D4AF37] data-[state=checked]:bg-[#D4AF37]"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Hiburan</p>
-                      <p className="text-xs text-gray-500">Musik & MC</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-3 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors">
-                    <Checkbox
-                      checked={services.makeup}
-                      onCheckedChange={(checked) =>
-                        setServices({ ...services, makeup: checked as boolean })
-                      }
-                      className="border-[#D4AF37] data-[state=checked]:bg-[#D4AF37]"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm">Make Up Artist</p>
-                      <p className="text-xs text-gray-500">Tata rias pengantin</p>
-                    </div>
-                  </div>
+                <label className="block mb-3 font-medium">Paket Layanan</label>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+
+                  {SERVICE_DEFINITIONS.map((svc) => {
+                    const active = services[svc.key as keyof typeof services];
+
+                    return (
+                      <button
+                        key={svc.key}
+                        type="button"
+                        onClick={() =>
+                          setServices({
+                            ...services,
+                            [svc.key as keyof typeof services]: !active,
+                          })
+                        }
+                        className={`
+                          flex flex-col items-start p-3 rounded-xl border transition 
+                          text-left
+                          ${active
+                            ? "bg-secondColor text-white"
+                            : "bg-white border-gray-300 hover:bg-appBoldPeach"
+                          }
+                        `}
+                      >
+                        <span className="text-sm font-medium">{svc.label}</span>
+                        <span className="text-xs opacity-80">{svc.desc}</span>
+                      </button>
+                    );
+                  })}
+
                 </div>
               </div>
 
               <Button
                 onClick={handleCalculate}
-                className="w-full bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                className="w-full bg-ruangTemuBold hover:brightness-90 text-white"
               >
                 <Calculator className="w-5 h-5 mr-2" />
                 Hitung Estimasi
@@ -276,136 +498,140 @@ export function BudgetEstimator() {
 
           {/* Results */}
           <div className="space-y-6">
-            <Card className="border-[#F4E4C1] shadow-lg bg-gradient-to-br from-white to-[#FFE4E9]/30">
+            <Card className="border-[#F4E4C1] shadow-lg bg-white">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-[#D4AF37]" />
+                <CardTitle className="flex text-mainColor font-bold font-dancingScript text-xl items-center gap-2">
+                  <TrendingUp className="w-5 h-5" />
                   Hasil Estimasi
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {showEstimate && guests && eventType && location ? (
                   <div className="space-y-6">
+                    {/* Total Estimasi */}
                     <div className="text-center p-6 bg-white rounded-xl">
                       <p className="text-sm text-gray-600 mb-2">Total Estimasi Biaya</p>
-                      <p className="text-4xl bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent mb-2">
-                        {formatPrice(estimate)}
+                      <p className="text-3xl bg-secondColor font-bold bg-clip-text text-transparent mb-2">
+                        {formatPrice(estimate.min)} - {formatPrice(estimate.max)}
                       </p>
                       <p className="text-sm text-gray-500">Untuk {guests} tamu</p>
                     </div>
 
-                    <div className="space-y-3">
-                      <p className="text-sm">Rincian Biaya:</p>
-                      {services.venue && (
-                        <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#D4AF37]" />
-                            <span className="text-sm">Venue</span>
-                          </div>
-                          <span className="text-sm text-gray-600">
-                            {formatPrice(parseInt(guests) * 50000)}
-                          </span>
-                        </div>
-                      )}
-                      {services.catering && (
-                        <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#D4AF37]" />
-                            <span className="text-sm">Catering</span>
-                          </div>
-                          <span className="text-sm text-gray-600">
-                            {formatPrice(parseInt(guests) * 150000)}
-                          </span>
-                        </div>
-                      )}
-                      {services.decoration && (
-                        <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#D4AF37]" />
-                            <span className="text-sm">Dekorasi</span>
-                          </div>
-                          <span className="text-sm text-gray-600">{formatPrice(15000000)}</span>
-                        </div>
-                      )}
-                      {services.photography && (
-                        <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#D4AF37]" />
-                            <span className="text-sm">Foto & Video</span>
-                          </div>
-                          <span className="text-sm text-gray-600">{formatPrice(10000000)}</span>
-                        </div>
-                      )}
-                      {services.entertainment && (
-                        <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#D4AF37]" />
-                            <span className="text-sm">Hiburan</span>
-                          </div>
-                          <span className="text-sm text-gray-600">{formatPrice(8000000)}</span>
-                        </div>
-                      )}
-                      {services.makeup && (
-                        <div className="flex justify-between items-center p-3 bg-white rounded-lg">
-                          <div className="flex items-center gap-2">
-                            <Check className="w-4 h-4 text-[#D4AF37]" />
-                            <span className="text-sm">Make Up Artist</span>
-                          </div>
-                          <span className="text-sm text-gray-600">{formatPrice(5000000)}</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-gray-400">
-                    <Calculator className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p>Isi form untuk melihat estimasi biaya</p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                  <div className="space-y-3">
+            <p className="text-sm font-medium">Perkiraan Rincian Biaya:</p>
+            
+            {(showAllServices ? activeServices : activeServices.slice(0, 3)).map((key) => {
+              const fn = SERVICE_COST_RANGE[key];
+              if (!fn) return null;
 
-            {/* Recommended Venues */}
-            {showEstimate && (
-              <Card className="border-[#F4E4C1] shadow-lg">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-                    Venue Sesuai Budget
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {recommendedVenues.map((venue) => (
-                    <div
-                      key={venue.id}
-                      className="flex gap-4 p-3 rounded-lg hover:bg-[#FFE4E9]/30 transition-colors cursor-pointer"
-                    >
-                      <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <ImageWithFallback
-                          src={venue.image}
-                          alt={venue.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <p className="mb-1">{venue.name}</p>
-                        <p className="text-sm text-[#D4AF37] mb-1">{formatPrice(venue.price)}</p>
-                        <div className="flex items-center gap-2">
-                          <div className="h-2 bg-gray-200 rounded-full flex-1 max-w-[100px]">
-                            <div
-                              className="h-2 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] rounded-full"
-                              style={{ width: `${venue.match}%` }}
-                            />
-                          </div>
-                          <span className="text-xs text-gray-600">{venue.match}% match</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </CardContent>
-              </Card>
+              const { min, max } = fn(parseInt(guests));
+
+              return (
+                <div key={key} className="flex justify-between items-center p-3 bg-white rounded-lg">
+                  <div className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-[#D4AF37]" />
+                    <span className="text-sm">{SERVICE_DEFINITIONS.find(s => s.key === key)?.label || key}</span>
+                  </div>
+                  <span className="text-sm text-gray-600">
+                    {formatPrice(min)} - {formatPrice(max)}
+                  </span>
+                </div>
+              );
+            })}
+
+            {activeServices.length > 3 && (
+              <button
+                onClick={() => setShowAllServices(!showAllServices)}
+                className="text-sm text-secondColor p-2 rounded-full hover:bg-greyColor justify-self-center mt-1"
+              >
+                {showAllServices ? "Sembunyikan" : "Tampilkan Semua"}
+              </button>
             )}
           </div>
+        </div>
+      ) : (
+        <div className="text-center py-12 text-gray-400">
+          <Calculator className="w-16 h-16 mx-auto mb-4 opacity-50" />
+          <p>Isi form untuk melihat estimasi biaya</p>
+        </div>
+      )}
+    </CardContent>
+  </Card>
+
+  {/* Recommended Venues */}
+{showEstimate && (
+  <Card className="border-[#F4E4C1] shadow-lg">
+    <CardHeader>
+      <CardTitle className="flex items-center gap-2">
+        <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+         Rekomendasi Venue Paling Relevan
+      </CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      {recommendedVenues.map((venue) => (
+        <div
+          key={venue.id}
+          className="flex gap-4 p-3 bg-greyColor rounded-lg hover:bg-greyColor/60 transition-colors cursor-pointer"
+          onClick={() => navigate(`/venue/${venue.id}`)}
+        >
+          {/* Thumbnail */}
+          <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+            <ImageWithFallback
+              src={venue.images[0]}
+              alt={venue.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Info */}
+          <div className="flex-1 flex flex-col justify-between">
+            <div>
+              {/* Nama & Harga */}
+              <p className="mb-1 font-semibold">{venue.name}</p>
+              <p className="text-md text-secondColor font-bold mb-1">{formatPrice(venue.price)}</p>
+
+              {/* Lokasi */}
+              <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
+                <MapPin className="w-3 h-3 text-secondColor" />
+                <span>{venue.location}</span>
+              </div>
+
+              {/* Kapasitas */}
+              <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
+                <Users className="w-3 h-3 text-secondColor" />
+                <span>{venue.capacity}</span>
+              </div>
+
+              {/* Fasilitas (max 3) */}
+              <div className="flex items-center gap-1 text-xs text-gray-600 mb-1">
+                <GiTheater className="w-3 h-3 text-secondColor" />
+                <span className="truncate max-w-[150px]">
+                  {venue.facilities.slice(0, 3).join(", ")}
+                  {venue.facilities.length > 3 ? "…" : ""}
+                </span>
+              </div>
+            </div>
+
+            {/* Match bar */}
+            <div className="flex items-center gap-2 mt-2">
+              <div className="h-2 bg-gray-200 rounded-full flex-1 max-w-[100px]">
+                <div
+                  className="h-2 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] rounded-full"
+                  style={{ width: `${venue.match}%` }}
+                />
+              </div>
+              <span className="text-xs text-gray-600">{venue.match}% match</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </CardContent>
+  </Card>
+)}
+
+
+</div>
+
         </div>
       </div>
     </div>
