@@ -1,5 +1,5 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { Heart, Building2 } from "lucide-react";
+import { Heart, Building2, Sparkle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import InputElement from "./atoms/InputElement";
@@ -11,9 +11,11 @@ import WhitePanel from "./atoms/WhitePanel";
 import TitleAndSubtitle from "./atoms/TitleAndSubtitle";
 import { useAuth } from "./AuthContext";
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useIsMobile } from "./ui/use-mobile";
 
 const LoginForm: FC = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const isMobile = useIsMobile();
   const [selectedRole, setSelectedRole] = useState<"couple" | "vendor">("couple");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -101,27 +103,37 @@ const LoginForm: FC = () => {
        {/* Overlay gradien semi-transparan */}
        <div className="absolute inset-0 bg-ruangTemu opacity-70"></div>
      </div>
-    <div className="relative w-full lg:w-1/2 h-[300px] lg:h-screen flex items-center justify-center">
-      <div className="absolute inset-0">
+    {!isMobile && (
+      <div className={`relative w-full lg:w-1/2 h-[300px] lg:h-screen flex items-center justify-center`}>
+        <div className="absolute inset-0">
+          <img
+            src="/assets/img/blob.webp"
+            alt="Blob Background"
+            className="w-full h-full  object-contain rotate-90 opacity-70"
+          />
+        </div>
         <img
-          src="/assets/img/blob.webp"
-          alt="Blob Background"
-          className="w-full h-full  object-contain rotate-90 opacity-70"
+          src="/assets/img/login-man.png"
+          alt="Login Illustration"
+          className="relative w-4/5 max-w-md object-contain z-10 drop-shadow-lg transform scale-x-[-1]"
         />
       </div>
-      <img
-        src="/assets/img/login-man.png"
-        alt="Login Illustration"
-        className="relative w-4/5 max-w-md object-contain z-10 drop-shadow-lg transform scale-x-[-1]"
-      />
-    </div>
+    )}
 
     {/* Kanan: Form */}
-    <div className="w-full lg:w-1/2 flex justify-center items-center">
+    {isMobile && (
+      <div className="text-center mt-8 z-10">
+                <div className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#F4E4C1] to-[#FFE4E9] rounded-full">
+                  <Sparkle className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-gray-700">Silakan login untuk pengalaman lebih baik</span>
+                </div>
+              </div>
+    )}
+    <div className={`w-full ${isMobile ? "h-[100dvh] mt-[-120px]" : ""} lg:w-1/2 flex justify-center items-center`}>
       <WhitePanel className="w-full max-w-xl">
         <div className="flex flex-col justify-center w-full">
           {/* Role Selector */}
-          <div className="mb-6">
+          <div className="pb-6">
             <h1 className="text-4xl font-bold text-mainColor text-center pb-[30px]">Login</h1>
             <div className="grid grid-cols-2 gap-3">
               <button

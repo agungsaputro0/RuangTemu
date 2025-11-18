@@ -27,7 +27,7 @@ export function BottomNavigation({ currentPage, onNavigate }: BottomNavigationPr
       { id: 'estimator', label: 'Budget', icon: Calculator },
       { id: 'eksplor', label: 'Eksplor', icon: Search, isCenter: true }, // tombol tengah
       { id: 'review', label: 'Komunitas', icon: Star },
-      { id: 'akun', label: 'Akun', icon: User },
+      { id: 'login', label: 'Akun', icon: User },
     ];
 
     return items;

@@ -1,4 +1,4 @@
-import { Star, ThumbsUp, MessageSquare, CheckCircle, Search, TrendingUp, Send, Plus, X, Clock, Eye, User } from 'lucide-react';
+import { Star, ThumbsUp, MessageSquare, CheckCircle, Search, TrendingUp, Send, Plus, X, Clock, Eye, User, Group } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
@@ -177,13 +177,34 @@ export function ReviewKomunitas() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-ruangTemuPremier/20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="mb-2">Komunitas</h1>
-          <p className="text-gray-600">Baca pengalaman pengguna lain dan bergabung dalam diskusi</p>
-        </div>
+      <div
+              aria-hidden
+              className="absolute top-16 left-0 w-full h-[40dvh] md:h-[35dvh] bg-[url('/assets/img/blob.png')] 
+                   bg-no-repeat  
+                   bg-[length:360%] 
+                   md:bg-[length:200%]
+                   bg-center
+                   z-0"
+            />
+              <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {/* Header */}
+              <div className="mt-16"></div>
+              <div className="text-center mb-12">
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#F4E4C1] to-[#FFE4E9] rounded-full mb-4">
+                  <Group className="w-4 h-4 text-[#D4AF37]" />
+                  <span className="text-sm text-gray-700">Komunitas & Diskusi</span>
+                </div>
 
+                <h1 className="mb-3 text-3xl font-bold bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-white font-dancingScript">
+                  Cerita & Pengalaman Nyata
+                </h1>
+
+                <p className="text-white max-w-2xl mx-auto">
+                  Temukan ulasan jujur, pengalaman pengguna lain, dan insight dari komunitas untuk membantu Anda membuat keputusan yang lebih yakin.
+                </p>
+              </div>
+              
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-[100px] border-gray-700">
         <Tabs defaultValue="reviews" className="space-y-6 p-4">
           <TabsList className="bg-ruangTemuPremier/20 p-1 rounded-xl flex gap-1 shadow-sm">
             <TabsTrigger
@@ -440,6 +461,7 @@ export function ReviewKomunitas() {
             </div>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
 
       {/* New Topic Dialog */}
