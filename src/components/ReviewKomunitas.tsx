@@ -14,6 +14,37 @@ import { toast } from 'sonner';
 import { useAuth } from './AuthContext';
 import { LoginModal } from './LoginModal';
 import { FaTrashAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+
+const ReviewHelpful = ({ initialLikes = 0 }) => {
+  const [liked, setLiked] = useState(false);
+  const [likes, setLikes] = useState(initialLikes);
+
+  const toggleLike = () => {
+    if (liked) {
+      setLikes(likes - 1);
+    } else {
+      setLikes(likes + 1);
+    }
+    setLiked(!liked);
+  };
+
+  return (
+    <button
+      onClick={toggleLike}
+      className={`flex items-center gap-2 text-sm transition-colors
+        ${liked ? "text-red-500" : "text-gray-600"} 
+        hover:text-[#D4AF37]`}
+    >
+      <ThumbsUp
+        className={`w-4 h-4 transition-colors 
+          ${liked ? "fill-red-500 text-red-500" : ""}`}
+      />
+      Helpful ({likes})
+    </button>
+  );
+};
+
 
 const reviews = [
   {
@@ -70,6 +101,11 @@ const forumTopics = [
     views: 456,
     lastActive: '2 jam lalu',
     trending: true,
+    content: `Memilih venue untuk acara dengan budget terbatas bisa menjadi tantangan. 
+    Beberapa tips yang bisa dicoba antara lain: mencari venue di luar pusat kota, 
+    memilih hari kerja agar harga lebih murah, dan melakukan negosiasi langsung 
+    dengan pihak pengelola venue. Selain itu, datang saat jam sepi akan memberikan 
+    kesempatan untuk mendapatkan penawaran lebih baik karena venue tidak sedang ramai.`,
   },
   {
     id: 2,
@@ -79,6 +115,10 @@ const forumTopics = [
     views: 312,
     lastActive: '5 jam lalu',
     trending: false,
+    content: `Saat negosiasi harga dengan vendor, penting untuk tahu detail kebutuhanmu dulu. 
+    Setelah itu, mintalah breakdown harga dan bandingkan dengan vendor lain. 
+    Banyak vendor sebenarnya fleksibel, terutama jika kamu tidak minta jadwal weekend. 
+    Jangan ragu untuk meminta bonus kecil seperti free lighting atau extra kursi.`,
   },
   {
     id: 3,
@@ -88,6 +128,10 @@ const forumTopics = [
     views: 678,
     lastActive: '1 hari lalu',
     trending: true,
+    content: `Jakarta punya ratusan vendor dekorasi, tapi tidak semua sesuai budget. 
+    Beberapa rekomendasi berdasarkan pengalaman komunitas: vendor minimalis untuk budget menengah, 
+    vendor rustic untuk tema intimate wedding, dan vendor premium untuk gala dinner. 
+    Selalu cek portofolionya, jangan dari katalog saja.`,
   },
   {
     id: 4,
@@ -97,11 +141,17 @@ const forumTopics = [
     views: 892,
     lastActive: '1 hari lalu',
     trending: true,
+    content: `Persiapan pernikahan dalam waktu 3 bulan memang mungkin. 
+    Mulailah dari booking venue, tentukan konsep acara, pilih vendor utama (dokumentasi, dekorasi,
+    catering), lalu lanjutkan ke undangan dan fitting baju. Gunakan spreadsheet untuk timeline. 
+    Banyak pasangan merasa lebih efektif karena tidak terlalu lama menunggu.`,
   },
 ];
 
+
 export function ReviewKomunitas() {
   const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showNewTopicDialog, setShowNewTopicDialog] = useState(false);
   const [showTopicDetailDialog, setShowTopicDetailDialog] = useState(false);
@@ -158,7 +208,7 @@ export function ReviewKomunitas() {
   const handleCreateTopicClick = () => {
     if (!isAuthenticated) {
       toast.error('Silakan login terlebih dahulu untuk membuat topik');
-      setShowLoginModal(true);
+      navigate("/login")
       return;
     }
     setShowNewTopicDialog(true);
@@ -204,36 +254,68 @@ export function ReviewKomunitas() {
                 </p>
               </div>
               
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-[100px] border-gray-700">
+       <div className="flex flex-col gap-4 mb-8 bg-white p-10 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+
         <Tabs defaultValue="reviews" className="space-y-6 p-4">
-          <TabsList className="bg-ruangTemuPremier/20 p-1 rounded-xl flex gap-1 shadow-sm">
+          <TabsList
+            className="
+              relative flex gap-2 py-6 rounded-2xl shadow-md 
+              bg-gradient-to-r from-ruangTemuPremier/30 via-ruangTemuBold/20 to-ruangTemuPremier/30
+              backdrop-blur-md
+              before:absolute before:inset-0 before:rounded-2xl 
+              before:border before:border-white/10 before:shadow-inner
+            "
+          >
             <TabsTrigger
               value="reviews"
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                        data-[state=active]:bg-ruangTemuPremier text-white
-                        hover:bg-ruangTemuPremier/50 hover:text-mainColor"
+              className="
+                group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold 
+                transition-all duration-300 relative overflow-hidden
+                py-4
+                data-[state=active]:text-white
+                data-[state=active]:bg-ruangTemuSecond
+                data-[state=active]:shadow-[0_4px_14px_rgba(180,90,255,0.4)]
+
+                text-mainColor/80 hover:text-mainColor
+                hover:bg-ruangTemuPremier/60
+                hover:shadow-[0_4px_12px_rgba(180,90,255,0.35)]
+
+                border border-white/5
+                backdrop-blur-sm
+              "
             >
-              <Star className="w-4 h-4" />
-              Review Terverifikasi
+              <Star className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+              <span>Review Pengguna</span>
             </TabsTrigger>
 
             <TabsTrigger
               value="forum"
-              className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                        data-[state=active]:bg-ruangTemuPremier text-white
-                        hover:bg-ruangTemuPremier/50 hover:text-mainColor"
+              className="
+                group flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold 
+                transition-all duration-300 relative overflow-hidden
+                py-4
+                data-[state=active]:text-white
+                data-[state=active]:bg-ruangTemuSecond
+                data-[state=active]:shadow-[0_4px_14px_rgba(180,90,255,0.4)]
+
+                text-mainColor/80 hover:text-mainColor
+                hover:bg-ruangTemuPremier/60
+                hover:shadow-[0_4px_12px_rgba(180,90,255,0.35)]
+
+                border border-white/5
+                backdrop-blur-sm
+              "
             >
-              <MessageSquare className="w-4 h-4" />
-              Forum Diskusi
+              <MessageSquare className="w-4 h-4 group-hover:scale-110 transition-transform duration-300" />
+              <span>Forum Diskusi</span>
             </TabsTrigger>
           </TabsList>
-
 
           {/* Reviews Tab */}
           <TabsContent value="reviews" className="space-y-6">
             {/* Search */}
             <Card className="border-[#F4E4C1]">
-              <CardContent className="p-4">
+              <CardContent className="p-4 -mb-2">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
@@ -244,105 +326,139 @@ export function ReviewKomunitas() {
               </CardContent>
             </Card>
 
-            {/* Stats */}
-            <div className="grid md:grid-cols-3 gap-4">
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-ruangTemuSecond rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Star className="w-6 h-6 text-white" />
-                  </div>
-                  <p className="text-3xl mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
-                    4.8
-                  </p>
-                  <p className="text-sm text-gray-600">Rating Rata-rata</p>
-                </CardContent>
-              </Card>
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-ruangTemuPremier/20">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-ruangTemuSecond rounded-full flex items-center justify-center mx-auto mb-3">
-                    <CheckCircle className="w-6 h-6 text-white" />
-                  </div>
-                  <p className="text-3xl mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
-                    1,247
-                  </p>
-                  <p className="text-sm text-gray-600">Review Terverifikasi</p>
-                </CardContent>
-              </Card>
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20">
-                <CardContent className="p-6 text-center">
-                  <div className="w-12 h-12 bg-ruangTemuSecond rounded-full flex items-center justify-center mx-auto mb-3">
-                    <ThumbsUp className="w-6 h-6 text-white" />
-                  </div>
-                  <p className="text-3xl mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
-                    98%
-                  </p>
-                  <p className="text-sm text-gray-600">Kepuasan Pelanggan</p>
-                </CardContent>
-              </Card>
-            </div>
+           {/* Community Stats */}
+          <div className="grid md:grid-cols-3 gap-4">
+
+            <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-ruangTemuPremier/10 shadow-sm">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 bg-ruangTemuSecond rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                  <Star className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-3xl font-semibold mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
+                  4.8
+                </p>
+                <p className="text-sm text-gray-600">Rating Rata-rata Semua Venue</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20 shadow-sm">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 bg-ruangTemuSecond rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                  <CheckCircle className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-3xl font-semibold mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
+                  1,247
+                </p>
+                <p className="text-sm text-gray-600">Total Review Terverifikasi</p>
+              </CardContent>
+            </Card>
+
+            <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-ruangTemuPremier/10 shadow-sm">
+              <CardContent className="p-6 text-center">
+                <div className="w-12 h-12 bg-ruangTemuSecond rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md">
+                  <ThumbsUp className="w-6 h-6 text-white" />
+                </div>
+                <p className="text-3xl font-semibold mb-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] bg-clip-text text-transparent">
+                  98%
+                </p>
+                <p className="text-sm text-gray-600">Kepuasan Pengguna</p>
+              </CardContent>
+            </Card>
+
+          </div>
+
 
             {/* Reviews List */}
-            <div className="space-y-4">
+            <div className="space-y-6">
               {reviews.map((review) => (
-                <Card key={review.id} className="border-[#F4E4C1] hover:shadow-md transition-shadow">
+                <Card
+                  key={review.id}
+                  className="border-[#F4E4C1]/60 bg-white/60 backdrop-blur-sm 
+                            shadow-sm hover:shadow-lg transition-all duration-300 
+                            rounded-2xl"
+                >
                   <CardContent className="p-6">
                     <div className="flex gap-4">
-                      <Avatar className="w-12 h-12">
+
+                      {/* Avatar */}
+                      <Avatar className="w-14 h-14 shadow-md ring-2 ring-[#F4E4C1]/50">
                         <AvatarImage src={review.userAvatar} />
-                        <AvatarFallback>{review.userName[0]}</AvatarFallback>
+                        <AvatarFallback className="bg-[#F4E4C1]/20 text-[#D4AF37] font-bold">
+                          {review.userName[0]}
+                        </AvatarFallback>
                       </Avatar>
+
                       <div className="flex-1">
-                        <div className="flex justify-between items-start mb-2">
+                        {/* Header */}
+                        <div className="flex justify-between items-start mb-3">
                           <div>
                             <div className="flex items-center gap-2 mb-1">
-                              <p>{review.userName}</p>
+                              <p className="font-semibold text-gray-800">{review.userName}</p>
+
                               {review.verified && (
-                                <Badge className="bg-[#D4AF37] text-white border-0 text-xs">
-                                  <CheckCircle className="w-3 h-3 mr-1" />
+                                <Badge
+                                  className="bg-ruangTemuSecond text-white border-0 text-xs px-2 py-0.5 
+                                            flex items-center gap-1 shadow-sm"
+                                >
+                                  <CheckCircle className="w-3 h-3" />
                                   Terverifikasi
                                 </Badge>
                               )}
                             </div>
-                            <p className="text-sm text-gray-600">{review.venueName}</p>
+
+                            <p className="text-xs text-gray-500 italic">
+                              Review untuk: {review.venueName}
+                            </p>
                           </div>
-                          <span className="text-sm text-gray-500">{review.date}</span>
+                          <span className="text-xs text-gray-500">{review.date}</span>
                         </div>
 
+                        {/* Rating */}
                         <div className="flex gap-1 mb-3">
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
                               className={`w-4 h-4 ${
                                 i < review.rating
-                                  ? 'fill-[#D4AF37] text-[#D4AF37]'
-                                  : 'text-gray-300'
+                                  ? "fill-[#D4AF37] text-[#D4AF37] drop-shadow-sm"
+                                  : "text-gray-300"
                               }`}
                             />
                           ))}
                         </div>
 
-                        <p className="text-gray-700 mb-4">{review.comment}</p>
+                        {/* Comment */}
+                        <p className="text-gray-700 leading-relaxed mb-4">
+                          {review.comment}
+                        </p>
 
+                        {/* Images */}
                         {review.images.length > 0 && (
-                          <div className="flex gap-2 mb-4">
+                          <div className="flex gap-3 mb-4">
                             {review.images.map((img, idx) => (
-                              <div key={idx} className="w-24 h-24 rounded-lg overflow-hidden">
+                              <div
+                                key={idx}
+                                className="w-28 h-28 rounded-xl overflow-hidden 
+                                          border border-[#F4E4C1]/40 shadow-sm"
+                              >
                                 <ImageWithFallback
                                   src={img}
                                   alt={`Review ${idx + 1}`}
-                                  className="w-full h-full object-cover"
+                                  className="w-full h-full object-cover hover:scale-105 transition-transform"
                                 />
                               </div>
                             ))}
                           </div>
                         )}
 
-                        <div className="flex gap-4 pt-4 border-t border-gray-100">
-                          <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors">
-                            <ThumbsUp className="w-4 h-4" />
-                            Helpful ({review.likes})
-                          </button>
-                          <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-[#D4AF37] transition-colors">
+                        {/* Footer */}
+                        <div className="flex gap-6 pt-4 border-t border-[#F4E4C1]/30">
+                        <ReviewHelpful initialLikes={review.likes} />
+
+                          <button
+                            className="flex items-center gap-2 text-sm text-gray-600 
+                                      hover:text-[#D4AF37] transition-colors"
+                          >
                             <MessageSquare className="w-4 h-4" />
                             Balasan ({review.replies})
                           </button>
@@ -354,8 +470,9 @@ export function ReviewKomunitas() {
               ))}
             </div>
 
+
             <div className="text-center">
-              <Button variant="outline" className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F4E4C1]/30">
+              <Button variant="outline" className="border-[#D4AF37] text-secondColor hover:bg-[#F4E4C1]/30">
                 Muat Lebih Banyak Review
               </Button>
             </div>
@@ -363,96 +480,192 @@ export function ReviewKomunitas() {
 
           {/* Forum Tab */}
           <TabsContent value="forum" className="space-y-6">
-            <div className="flex flex-col sm:flex-row gap-3 sm:justify-between sm:items-center">
-              <div className="relative flex-1 max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full">
+              {/* Input full width */}
+              <div className="relative flex-1">
+                 <Card className="border-[#F4E4C1]">
+              <CardContent className="p-4 -mb-2 flex gap-4">
+                <Search className="absolute left-8 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   placeholder="Cari topik diskusi..."
-                  className="pl-10 border-[#F4E4C1]"
+                  className="pl-10 border-[#F4E4C1] w-full"
                 />
-              </div>
-              <Button 
+                 <Button 
                 onClick={handleCreateTopicClick}
-                className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                className="bg-ruangTemuBold hover:brightness-90 text-white flex-shrink-0"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Buat Topik Baru
               </Button>
+                </CardContent>
+                </Card>
+              </div>
+
+              {/* Button */}
+             
             </div>
 
             {/* Forum Stats */}
             <div className="grid sm:grid-cols-3 gap-4">
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20">
-                <CardContent className="p-4 text-center">
-                  <MessageSquare className="w-8 h-8 mx-auto mb-2 text-[#D4AF37]" />
-                  <p className="text-2xl mb-1 text-[#D4AF37]">347</p>
-                  <p className="text-sm text-gray-600">Total Topik</p>
+              <Card className="border border-[#F4E4C1]/60 rounded-2xl 
+                                bg-gradient-to-br from-white via-[#FFF8EF] to-[#F4E4C1]/30 
+                                shadow-sm hover:shadow-md transition-all duration-200">
+                <CardContent className="p-6 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl 
+                                  bg-ruangTemuSecond 
+                                  flex items-center justify-center shadow">
+                    <MessageSquare className="w-7 h-7 text-white" />
+                  </div>
+
+                  <p className="text-3xl font-semibold mb-1 
+                                bg-ruangTemuSecond
+                                bg-clip-text text-transparent">
+                    347
+                  </p>
+
+                  <p className="text-sm text-gray-600 tracking-wide">
+                    Total Post
+                  </p>
                 </CardContent>
               </Card>
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-ruangTemuPremier/20">
-                <CardContent className="p-4 text-center">
-                  <User className="w-8 h-8 mx-auto mb-2 text-[#FFB6C1]" />
-                  <p className="text-2xl mb-1 text-[#FFB6C1]">1,234</p>
-                  <p className="text-sm text-gray-600">Anggota Aktif</p>
+
+              <Card className="border border-[#F4E4C1]/60 rounded-2xl 
+                                bg-gradient-to-br from-white via-[#FFF1F6] to-ruangTemuPremier/30 
+                                shadow-sm hover:shadow-md transition-all duration-200">
+                <CardContent className="p-6 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl 
+                                  bg-ruangTemuSecond
+                                  flex items-center justify-center shadow">
+                    <User className="w-7 h-7 text-white" />
+                  </div>
+
+                  <p className="text-3xl font-semibold mb-1 
+                                bg-ruangTemuSecond
+                                bg-clip-text text-transparent">
+                    560
+                  </p>
+
+                  <p className="text-sm text-gray-600 tracking-wide">
+                    Pengguna Berkontribusi
+                  </p>
                 </CardContent>
               </Card>
-              <Card className="border-[#F4E4C1] bg-gradient-to-br from-white to-[#F4E4C1]/20">
-                <CardContent className="p-4 text-center">
-                  <TrendingUp className="w-8 h-8 mx-auto mb-2 text-[#D4AF37]" />
-                  <p className="text-2xl mb-1 text-[#D4AF37]">12</p>
-                  <p className="text-sm text-gray-600">Topik Trending</p>
+
+              <Card className="border border-[#F4E4C1]/60 rounded-2xl 
+                                bg-gradient-to-br from-white via-[#FFF8EF] to-[#F4E4C1]/30 
+                                shadow-sm hover:shadow-md transition-all duration-200">
+                <CardContent className="p-6 text-center">
+                  <div className="w-14 h-14 mx-auto mb-3 rounded-xl 
+                                  bg-ruangTemuSecond
+                                  flex items-center justify-center shadow">
+                    <TrendingUp className="w-7 h-7 text-white" />
+                  </div>
+
+                  <p className="text-3xl font-semibold mb-1 
+                                bg-ruangTemuSecond
+                                bg-clip-text text-transparent">
+                    5.2
+                  </p>
+
+                  <p className="text-sm text-gray-600 tracking-wide">
+                    Rata-rata Balasan per Post
+                  </p>
                 </CardContent>
               </Card>
             </div>
 
+
             {/* Forum Topics */}
-            <div className="space-y-3">
-              {forumTopics.map((topic) => (
-                <Card
-                  key={topic.id}
-                  className="border-[#F4E4C1] hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => handleViewTopic(topic)}
-                >
-                  <CardContent className="p-5">
-                    <div className="flex gap-4">
-                      <div className="flex-1">
-                        <div className="flex items-start gap-2 mb-2">
-                          <h4 className="flex-1 hover:text-[#D4AF37] transition-colors">{topic.title}</h4>
-                          {topic.trending && (
-                            <Badge className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white border-0">
-                              <TrendingUp className="w-3 h-3 mr-1" />
-                              Trending
-                            </Badge>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-2 mb-3">
-                          <Avatar className="w-6 h-6">
-                            <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37] text-xs">
-                              {topic.author[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <p className="text-sm text-gray-600">Oleh {topic.author}</p>
-                        </div>
-                        <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                          <span className="flex items-center gap-1">
-                            <MessageSquare className="w-4 h-4" />
-                            {topic.replies} balasan
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Eye className="w-4 h-4" />
-                            {topic.views} views
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {topic.lastActive}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="space-y-4">
+  {forumTopics.map((topic) => {
+    const [expanded, setExpanded] = useState(false);
+
+    return (
+      <Card
+        key={topic.id}
+        className="border-[#F4E4C1] hover:shadow-lg transition-all rounded-xl bg-white/70 backdrop-blur-sm"
+      >
+        <CardContent className="p-6">
+
+          {/* Author */}
+          <div className="flex items-center gap-3 mb-4">
+            <Avatar className="w-8 h-8 shadow-sm">
+              <AvatarFallback className="bg-[#F4E4C1] text-[#D4AF37] text-sm">
+                {topic.author[0]}
+              </AvatarFallback>
+            </Avatar>
+            <div>
+              <p className="text-sm font-medium text-gray-700">{topic.author}</p>
+              <p className="text-xs text-gray-500">mengawali diskusi</p>
             </div>
+          </div>
+
+          {/* Title */}
+          <div className="flex items-start gap-2 mb-3">
+            <h4
+              className="flex-1 text-lg font-semibold text-gray-800 hover:text-[#D4AF37] transition-colors leading-snug"
+              onClick={() => handleViewTopic(topic)}
+            >
+              {topic.title}
+            </h4>
+
+            {topic.trending && (
+              <Badge className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white border-0 shadow-sm flex items-center">
+                <TrendingUp className="w-3 h-3 mr-1" />
+                Trending
+              </Badge>
+            )}
+          </div>
+
+          {/* Content with clamp + fade + expand */}
+            <div className="relative">
+              {/* Text Wrapper */}
+              <div className="relative">
+                <p className={`${expanded ? "" : "line-clamp-3"} text-gray-700 leading-relaxed`}>
+                  {topic.content}
+                </p>
+
+                {/* Fade overlay (only over text) */}
+                {!expanded && (
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-white to-transparent"></div>
+                )}
+              </div>
+
+              {/* Button OUTSIDE the faded area */}
+              <button
+                className="mt-2 relative z-10 text-sm font-medium text-[#D4AF37] hover:text-[#b89230] transition-colors"
+                onClick={() => setExpanded(!expanded)}
+              >
+                {expanded ? "Tutup" : "Lihat Selengkapnya"}
+              </button>
+            </div>
+
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-6 text-sm text-gray-600 pt-4 border-t border-[#F4E4C1]/30 mt-4">
+            <span className="flex items-center gap-1 cursor-pointer">
+              <MessageSquare className="w-4 h-4 text-[#D4AF37]" />
+              {topic.replies} balasan
+            </span>
+
+            <span className="flex items-center gap-1 cursor-pointer">
+              <Eye className="w-4 h-4 text-[#FFB6C1]" />
+              {topic.views} views
+            </span>
+
+            <span className="flex items-center gap-1 cursor-pointer">
+              <Clock className="w-4 h-4 text-[#D4AF37]" />
+              {topic.lastActive}
+            </span>
+          </div>
+
+        </CardContent>
+      </Card>
+    );
+  })}
+</div>
+
+
 
             <div className="text-center">
               <Button variant="outline" className="border-[#D4AF37] text-[#D4AF37] hover:bg-[#F4E4C1]/30">

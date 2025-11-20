@@ -450,7 +450,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
+    <div className="min-h-screen-default mt-16 bg-gradient-to-b from-white to-[#FFE4E9]/20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
@@ -465,9 +465,9 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Chat List */}
           <Card className="lg:col-span-1 border-[#F4E4C1] shadow-lg">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <MessageCircle className="w-5 h-5 text-[#D4AF37]" />
+            <CardHeader className="bg-ruangTemuSecond pb-4 rounded-t-xl">
+              <CardTitle className="flex items-center gap-2 text-white text-2xl">
+                <MessageCircle className="w-5 h-5 text-white font-bold text-2xl" />
                 {isVendor ? 'Daftar Client' : 'Percakapan'}
               </CardTitle>
             </CardHeader>
@@ -506,7 +506,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
 
           {/* Chat Messages */}
           <Card className="lg:col-span-2 border-[#F4E4C1] shadow-lg">
-            <CardHeader className="border-b border-gray-100">
+            <CardHeader className="border-b text-white text-2xl border-gray-100 bg-ruangTemuSecond pb-2 rounded-t-xl">
               <div className="flex justify-between items-center">
                 <CardTitle>
                   {activeChat ? chats.find((c) => c.id === activeChat)?.venueName : 'Pilih percakapan'}
@@ -593,7 +593,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
                           <div
                             className={`max-w-[70%] rounded-2xl px-4 py-3 ${
                               msg.sender === 'user'
-                                ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white'
+                                ? 'bg-ruangTemuPremier text-white'
                                 : 'bg-gray-100 text-gray-800'
                             }`}
                           >
@@ -664,7 +664,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
                       />
                       <Button
                         onClick={handleSendMessage}
-                        className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                        className="bg-ruangTemuSecond hover:brightness-90 text-white"
                       >
                         <Send className="w-5 h-5" />
                       </Button>
@@ -702,7 +702,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
                   Kontrak Digital
                 </CardTitle>
                 <Button 
-                  className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                  className="bg-ruangTemuSecond hover:brightness-90 text-white"
                   onClick={handleCreateContract}
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
@@ -739,7 +739,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
                         {contract.status === 'draft' && (
                           <Button 
                             size="sm" 
-                            className="flex-1 bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white"
+                            className="flex-1 bg-ruangTemuSecond text-white"
                             onClick={() => handleSignContract(contract)}
                           >
                             <CheckCircle2 className="w-4 h-4 mr-1" />
@@ -809,9 +809,9 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
       {/* Form */}
       <div className="space-y-4 flex-1 overflow-auto">
         {/* Harga Saat Ini */}
-        <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-          <p className="text-sm text-gray-600 mb-1">Harga Saat Ini</p>
-          <p className="text-[#D4AF37]">Rp 67.500.000</p>
+        <div className="p-4 bg-ruangTemu rounded-lg">
+          <p className="text-sm text-mainColor mb-1 font-bold">Harga Saat Ini</p>
+          <p className="text-secondColor text-2xl font-bold">Rp 67.500.000</p>
         </div>
 
         {/* Harga yang Diajukan */}
@@ -862,7 +862,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
         </Button>
         <Button
           onClick={handleSendProposal}
-          className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+          className="bg-ruangTemuSecond hover:brightness-90 text-white"
         >
           Kirim Tawaran
         </Button>
@@ -914,7 +914,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
         {/* Parties Info */}
         <div className="space-y-4">
           {/* Vendor */}
-          <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
+          <div className="p-4 bg-ruangTemu rounded-lg">
             <h3 className="mb-3">Pihak Pertama (Vendor):</h3>
             <div className="space-y-1 text-sm">
               <p><span className="text-gray-600">Nama:</span> {selectedContract?.venueName || 'Grand Ballroom Elegance'}</p>
@@ -924,7 +924,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
           </div>
 
           {/* Calon Pengantin */}
-          <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
+          <div className="p-4 bg-ruangTemu rounded-lg">
             <h3 className="mb-3">Pihak Kedua (Calon Pengantin):</h3>
             <div className="space-y-1 text-sm">
               <p><span className="text-gray-600">Nama:</span> John Doe & Jane Smith</p>
@@ -1009,7 +1009,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
               setShowContractDialog(false);
               handleSignContract(selectedContract || contracts[0]);
             }}
-            className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+            className="bg-ruangTemuSecond hover:brightness-90 text-white"
           >
             <PenTool className="w-4 h-4 mr-2" />
             Tanda Tangan Sekarang
@@ -1051,10 +1051,10 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
       <div className="space-y-4 flex-1 overflow-auto py-2">
         
         {/* Contract info */}
-        <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-          <p className="text-sm text-gray-600 mb-1">Kontrak untuk:</p>
-          <p className="text-[#D4AF37]">{selectedContract?.venueName}</p>
-          <p className="text-sm text-gray-600 mt-2">Nilai: {selectedContract?.amount}</p>
+        <div className="p-4 bg-ruangTemu rounded-lg">
+          <p className="text-sm text-gray-800 mb-1">Kontrak untuk:</p>
+          <p className="text-secondColor font-bold">{selectedContract?.venueName}</p>
+          <p className="text-xl text-mainColor font-bold mt-1">Senilai: {selectedContract?.amount}</p>
         </div>
 
         {/* Signature canvas */}
@@ -1124,7 +1124,7 @@ export function NegosiasiKontrak({ userRole }: NegosiasiKontrakProps = {}) {
         <Button
           onClick={handleSubmitSignature}
           disabled={!signature.trim()}
-          className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+          className="bg-ruangTemuSecond hover:brightness-90 text-white"
         >
           <CheckCircle2 className="w-4 h-4 mr-2" />
           Setuju & Tanda Tangan

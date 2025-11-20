@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import InputElement from "./atoms/InputElement";
 import Button from "./atoms/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import WhitePanel from "./atoms/WhitePanel";
@@ -16,6 +16,7 @@ import { useIsMobile } from "./ui/use-mobile";
 const LoginForm: FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
   const [selectedRole, setSelectedRole] = useState<"couple" | "vendor">("couple");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,6 +44,7 @@ const LoginForm: FC = () => {
       if (isLogin) {
         await login(formData.email, formData.password, selectedRole);
         toast.success("Login berhasil! Selamat datang di Ruang Temu");
+        navigate("/beranda");
       } else {
         if (formData.password !== formData.confirmPassword) {
           toast.error("Password tidak cocok");

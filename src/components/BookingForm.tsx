@@ -22,6 +22,8 @@ import { Textarea } from './ui/textarea';
 import { Separator } from './ui/separator';
 import { Badge } from './ui/badge';
 import { RFQSubmission } from './RFQSubmission';
+import { DatePicker, TimePicker } from 'antd';
+import dayjs from 'dayjs';
 
 interface BookingFormProps {
   venue: any;
@@ -70,7 +72,7 @@ const addOnServices = [
 export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
   const [step, setStep] = useState(1);
   const [showRFQSubmission, setShowRFQSubmission] = useState(false);
-
+  const dateFormat = "DD-MM-YYYY";
   // Form data
   const [eventName, setEventName] = useState('');
   const [eventDate, setEventDate] = useState('');
@@ -144,11 +146,11 @@ export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-[#FFE4E9]/20">
+    <div className="min-h-screen-default mt-16 bg-ruangTemuAmbient">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-white border-b border-gray-200">
+      <div className="sticky top-0 z-10 bg-white border-b border-gray-200 bg-ruangTemuLight">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between ">
             <Button variant="ghost" onClick={step === 1 ? onBack : () => setStep(1)}>
               <ArrowLeft className="w-5 h-5 mr-2" />
               Kembali
@@ -157,7 +159,7 @@ export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   step >= 1
-                    ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white'
+                    ? 'bg-ruangTemuSecond text-white'
                     : 'bg-gray-200 text-gray-500'
                 }`}
               >
@@ -167,7 +169,7 @@ export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
               <div
                 className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   step >= 2
-                    ? 'bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white'
+                    ? 'bg-ruangTemuSecond text-white'
                     : 'bg-gray-200 text-gray-500'
                 }`}
               >
@@ -190,8 +192,8 @@ export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
             <Card className="border-[#F4E4C1]">
               <CardContent className="p-6 space-y-6">
                 {/* Venue Info */}
-                <div className="p-4 bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20 rounded-lg">
-                  <p className="text-sm text-gray-600 mb-1">Venue yang dipilih</p>
+                <div className="p-4 bg-ruangTemu rounded-lg">
+                  <p className="text-sm text-mainColor mb-1 font-bold">Venue yang dipilih</p>
                   <h4>{venue.name}</h4>
                 </div>
 
@@ -209,39 +211,45 @@ export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
 
                 {/* Date and Time */}
                 <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="eventDate">Tanggal Acara *</Label>
-                    <div className="relative">
-                      <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
-                      <Input
-                        id="eventDate"
-                        type="date"
-                        value={eventDate}
-                        onChange={(e) => setEventDate(e.target.value)}
-                        className="pl-10 border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="eventTime">Jam Acara *</Label>
-                    <div className="relative">
-                      <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
-                      <Input
-                        id="eventTime"
-                        type="time"
-                        value={eventTime}
-                        onChange={(e) => setEventTime(e.target.value)}
-                        className="pl-10 border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
-                      />
-                    </div>
-                  </div>
-                </div>
+            {/* Tanggal Acara */}
+            <div className="space-y-2">
+              <Label htmlFor="eventDate">Tanggal Acara *</Label>
+              <DatePicker
+                id="eventDate"
+                value={eventDate ? dayjs(eventDate, dateFormat) : null}
+                onChange={(date) => setEventDate(date ? date.format(dateFormat) : "")}
+                className="w-full border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+                suffixIcon={<Calendar className="text-[#D4AF37]" />}
+                placeholder="Pilih tanggal"
+                format={dateFormat}
+                allowClear
+              />
+            </div>
+
+            {/* Jam Acara */}
+            <div className="space-y-2">
+              <Label htmlFor="eventTime">Jam Acara *</Label>
+              <TimePicker
+                id="eventTime"
+                value={eventTime ? dayjs(eventTime, "HH:mm") : null}
+                onChange={(time) => setEventTime(time ? time.format("HH:mm") : "")}
+                className="w-full border-[#F4E4C1] focus-visible:ring-[#D4AF37]"
+                format="HH:mm"
+                placeholder="Pilih jam"
+                suffixIcon={<Clock className="text-[#D4AF37]" />}
+                use12Hours={false}  // gunakan format 24 jam
+                showNow={true}      // tombol cepat untuk sekarang
+                minuteStep={5}      // lebih mudah memilih menit
+                popupClassName="custom-timepicker-popup"
+              />
+            </div>
+          </div>
 
                 {/* Guest Count */}
                 <div className="space-y-2">
                   <Label htmlFor="guestCount">Jumlah Tamu *</Label>
                   <div className="relative">
-                    <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#D4AF37]" />
+                    <Users className="absolute left-3 top-1/2 translate-y-[-11px] w-5 h-5 text-[#D4AF37]" />
                     <Input
                       id="guestCount"
                       type="number"
@@ -316,7 +324,7 @@ export function BookingForm({ venue, onBack, onSubmit }: BookingFormProps) {
             <Button
               onClick={handleContinue}
               disabled={!eventName || !eventDate || !eventTime || !guestCount}
-              className="w-full bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+              className="w-full bg-ruangTemuSecond hover:brightness-90 text-white"
             >
               Lanjut ke Add-ons
             </Button>

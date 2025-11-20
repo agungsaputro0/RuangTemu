@@ -267,6 +267,8 @@ import { Toaster } from './components/ui/sonner';
 import Footer from './components/Footer';
 import LandingCurtain from './components/LandingCurtain';
 import LoginForm from './components/LoginForm';
+import ScrollToTop from './hooks/UseScrollToTop';
+import { encryptData } from './hooks/UseEncryptor';
 
 function AppRoutes() {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -296,7 +298,7 @@ function AppRoutes() {
 
   const handleVenueClick = (venueId: number) => {
     setSelectedVenueId(venueId);
-    navigate(`/venue/${venueId}`);
+    navigate(`/venue/${encryptData(venueId.toString())}`);
   };
   const handleBackFromVenue = () => setSelectedVenueId(null);
   const handleBookingComplete = () => {
@@ -396,6 +398,7 @@ export default function App() {
   return (
     <AuthProvider>
       <Router>
+        <ScrollToTop />
         <AppRoutes />
       </Router>
     </AuthProvider>

@@ -30,16 +30,16 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
         { id: 'vendor', label: 'Dashboard' },
         { id: 'negosiasi', label: 'Chat & Negosiasi' },
         { id: 'review', label: 'Komunitas' },
-        { id: 'akun', label: 'Akun Saya' },
+        // { id: 'akun', label: 'Akun Saya' },
       ];
     }
     return [
       { id: 'beranda', label: 'Beranda' },
       { id: 'eksplor', label: 'Eksplor Venue' },
       { id: 'estimator', label: 'Budget Estimator' },
-      { id: 'negosiasi', label: 'Negosiasi & Kontrak' },
+      { id: 'negosiasi', label: 'Negosiasi-Kontrak' },
       { id: 'review', label: 'Komunitas' },
-      { id: 'akun', label: 'Akun Saya' },
+      // { id: 'akun', label: 'Akun Saya' },
     ];
   };
 
@@ -93,13 +93,14 @@ export function Navbar({ currentPage, onNavigate }: NavbarProps) {
               {isAuthenticated ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <button className="flex items-center gap-2 p-1 rounded-full hover:bg-[#FFE4E9]/30 transition-colors">
+                    <button className="flex items-center gap-2 p-1 w-[150px] rounded-full hover:bg-[#FFE4E9]/30 transition-colors">
                       <Avatar className="w-9 h-9">
                         <AvatarImage src={user?.avatar} />
-                        <AvatarFallback className="bg-gradient-to-br from-[#D4AF37] to-[#FFB6C1] text-white text-xs">
+                        <AvatarFallback className="bg-gradient-to-br from-[#D4AF37] to-[#FFB6C1] text-black text-xs">
                           {user?.name.substring(0, 2).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
+                      <span className="text-sm font-medium text-gray-700">User Demo</span>
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-56">

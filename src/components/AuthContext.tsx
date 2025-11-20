@@ -64,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('ruangtemu_user');
+    window.location.href = "/login";
   };
 
   const updateHasSeenOnboarding = (value: boolean) => {

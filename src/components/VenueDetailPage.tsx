@@ -50,10 +50,12 @@ const venueDetails = {
     description:
       'Grand Ballroom Elegance adalah venue pernikahan mewah dengan desain interior klasik Eropa. Dilengkapi dengan crystal chandelier yang megah, panggung luas, dan sistem audio-visual modern. Lokasi strategis di pusat kota Jakarta memudahkan akses tamu dari berbagai area.',
     images: [
+      'https://images.unsplash.com/photo-1733761002935-244f889465b9?w=1200',
+    ],
+    images360: [
       '/assets/img/StreetView/1.jpg',
       '/assets/img/StreetView/2.jpg',
       '/assets/img/StreetView/3.jpg',
-     'https://images.unsplash.com/photo-1478146059745-aabe4545d3e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWRkaW5nJTIwdGFibGUlMjBzZXR0aW5nfGVufDF8fHx8MTc1OTk3NTg5Nnww&ixlib=rb-4.1.0&q=80&w=1080',
     ],
     facilities: [
       { icon: Wind, name: 'AC', available: true },
@@ -202,9 +204,9 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
       </div>
 
       {/* Image Gallery */}
-      <div className="relative h-[500px] bg-gray-100">
+      <div className="relative h-[450px] bg-gray-100">
         <ImageWithFallback
-          src={venue.images[currentImageIndex]}
+          src={venue.images[0]}
           alt={venue.name}
           className="w-full h-full object-cover"
         />
@@ -249,16 +251,16 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
           <div className="lg:col-span-2 space-y-6">
             {/* Title Section */}
             <div>
-              <div className="flex items-start justify-between mb-2">
+              <div className="flex items-start font-bold text-3xl text-mainColor justify-between mb-4">
                 <h1>{venue.name}</h1>
-                <Badge className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white">
+                <Badge className="bg-ruangTemuBold text-white">
                   Verified Vendor
                 </Badge>
               </div>
               <div className="flex items-center gap-4 text-gray-600">
                 <div className="flex items-center gap-1">
-                  <Star className="w-5 h-5 fill-[#D4AF37] text-[#D4AF37]" />
-                  <span className="text-[#D4AF37]">{venue.rating}</span>
+                  <Star className="w-5 h-5 fill-secondColor text-secondColor" />
+                  <span className="text-secondColor">{venue.rating}</span>
                   <span>({venue.reviews.length} review)</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -290,21 +292,21 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                 <div className="grid md:grid-cols-3 gap-4">
                   <Card className="border-[#F4E4C1]">
                     <CardContent className="p-4 text-center">
-                      <Users className="w-8 h-8 mx-auto mb-2 text-[#D4AF37]" />
+                      <Users className="w-8 h-8 mx-auto mb-2 text-secondColor" />
                       <p className="text-sm text-gray-600 mb-1">Kapasitas</p>
                       <p>{venue.capacity}</p>
                     </CardContent>
                   </Card>
                   <Card className="border-[#F4E4C1]">
                     <CardContent className="p-4 text-center">
-                      <MapPin className="w-8 h-8 mx-auto mb-2 text-[#D4AF37]" />
+                      <MapPin className="w-8 h-8 mx-auto mb-2 text-secondColor" />
                       <p className="text-sm text-gray-600 mb-1">Lokasi</p>
                       <p>Jakarta Pusat</p>
                     </CardContent>
                   </Card>
                   <Card className="border-[#F4E4C1]">
                     <CardContent className="p-4 text-center">
-                      <Calendar className="w-8 h-8 mx-auto mb-2 text-[#D4AF37]" />
+                      <Calendar className="w-8 h-8 mx-auto mb-2 text-secondColor" />
                       <p className="text-sm text-gray-600 mb-1">Response Time</p>
                       <p>{venue.vendorInfo.responseTime}</p>
                     </CardContent>
@@ -342,7 +344,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                     key={index}
                     className={`border-2 ${
                       selectedPackage === pkg
-                        ? 'border-[#D4AF37] bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20'
+                        ? 'border-secondColor bg-gradient-to-r from-[#F4E4C1]/20 to-[#FFE4E9]/20'
                         : 'border-gray-200'
                     }`}
                   >
@@ -351,14 +353,14 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                         <div>
                           <h4 className="mb-1">{pkg.name}</h4>
                           {pkg.recommended && (
-                            <Badge className="bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] text-white">
+                            <Badge className="bg-ruangTemuPremier text-white">
                               Recommended
                             </Badge>
                           )}
                         </div>
                         <div className="text-right">
                           <p className="text-sm text-gray-600">Mulai dari</p>
-                          <p className="text-[#D4AF37] font-bold text-xl">
+                          <p className="text-secondColor font-bold text-xl">
                             Rp {pkg.price.toLocaleString('id-ID')}
                           </p>
                         </div>
@@ -391,13 +393,13 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                           <div
                             className={`w-12 h-12 rounded-full flex items-center justify-center ${
                               facility.available
-                                ? 'bg-gradient-to-br from-[#D4AF37]/20 to-[#FFB6C1]/20'
+                                ? 'bg-gradient-to-br from-secondColor/20 to-[#FFB6C1]/20'
                                 : 'bg-gray-100'
                             }`}
                           >
                             <Icon
                               className={`w-6 h-6 ${
-                                facility.available ? 'text-[#D4AF37]' : 'text-gray-400'
+                                facility.available ? 'text-secondColor' : 'text-gray-400'
                               }`}
                             />
                           </div>
@@ -433,7 +435,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                           {[...Array(5)].map((_, i) => (
                             <Star
                               key={i}
-                              className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]"
+                              className="w-4 h-4 fill-secondColor text-secondColor"
                             />
                           ))}
                         </div>
@@ -443,7 +445,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                         <p className="text-sm text-gray-600 mb-2">
                           {venue.vendorInfo.confirmationRate} customer puas dengan venue ini
                         </p>
-                        <Badge variant="outline" className="border-[#D4AF37] text-[#D4AF37]">
+                        <Badge variant="outline" className="border-secondColor text-secondColor">
                           Verified Reviews
                         </Badge>
                       </div>
@@ -462,7 +464,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                             {[...Array(review.rating)].map((_, i) => (
                               <Star
                                 key={i}
-                                className="w-4 h-4 fill-[#D4AF37] text-[#D4AF37]"
+                                className="w-4 h-4 fill-secondColor text-secondColor"
                               />
                             ))}
                           </div>
@@ -496,7 +498,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
               <CardContent className="p-6 space-y-4">
                 <div>
                   <p className="text-sm text-gray-600 mb-1">Harga mulai dari</p>
-                  <h2 className="text-3xl font-bold text-[#D4AF37]">
+                  <h2 className="text-3xl font-bold text-secondColor">
                     Rp {selectedPackage.price.toLocaleString('id-ID')}
                   </h2>
                   <p className="text-sm text-gray-600 mt-1">{selectedPackage.name}</p>
@@ -513,7 +515,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                         onClick={() => {
                           if (!isAuthenticated) {
                             toast.error('Silakan login sebagai Calon Pengantin terlebih dahulu untuk melakukan pemesanan');
-                            setShowLoginModal(true);
+                            navigate("/login");
                             return;
                           }
                           if (user?.role !== 'couple') {
@@ -522,7 +524,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                           }
                           setShowBookingForm(true);
                         }}
-                        className="w-full bg-gradient-to-r from-[#D4AF37] to-[#FFB6C1] hover:brightness-90 text-white"
+                        className="w-full bg-ruangTemuSecond hover:brightness-90 text-white"
                       >
                         Pesan Sekarang
                       </Button>
@@ -530,7 +532,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                         onClick={() => {
                           if (!isAuthenticated) {
                             toast.error('Silakan login sebagai Calon Pengantin terlebih dahulu untuk melakukan pemesanan');
-                            setShowLoginModal(true);
+                            navigate("/login");
                             return;
                           }
                           if (user?.role !== 'couple') {
@@ -540,7 +542,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
                           setShowBookingForm(true);
                         }}
                         variant="outline"
-                        className="w-full border-[#D4AF37] text-[#D4AF37] hover:bg-[#F4E4C1]/30"
+                        className="w-full border-secondColor text-secondColor hover:bg-[#F4E4C1]/30"
                       >
                         Kirim Permintaan Penawaran
                       </Button>
@@ -581,7 +583,7 @@ export function VenueDetailPage({ onBack, onBookingComplete }: VenueDetailPagePr
       {showVirtualTour && (
         <VirtualTour360
           venueName={venue.name}
-          tourImages={venue.images}
+          tourImages={venue.images360}
           onClose={() => setShowVirtualTour(false)}
         />
       )}
